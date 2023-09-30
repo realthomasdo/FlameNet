@@ -14,7 +14,6 @@ public class SignalController : MonoBehaviour
     [SerializeField] private float growthSpeed;
     [SerializeField] private Renderer myModel;
     private Packet packet;
-
     public void SetValues(Packet packet, float maxDistance)
     {
         this.packet = packet;
@@ -31,6 +30,15 @@ public class SignalController : MonoBehaviour
         if (maxDistance <= distanceTraveled)
         {
             Destroy(gameObject);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("trigger");
+        Debug.Log("collision occured:  tag was " + other.gameObject.tag);
+        if (other.gameObject.CompareTag("Beacon"))
+        {
+            other.gameObject.GetComponent<BeaconController>().CollectData(packet);
         }
     }
 }

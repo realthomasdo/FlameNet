@@ -19,44 +19,41 @@ public struct SensorInformation
 public class BeaconController : MonoBehaviour
 {
     private int beaconID;
-    private bool isOn;
     private List<SensorInformation> data;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private bool sendSignal = false;
+    private void Start()
     {
-        beaconID = 1;
-        data = new List<SensorInformation>();
-        data.Add(new SensorInformation { });
-        setPower(true);
-        StartCoroutine(SpawnSignal());
-    }
-    public void setPower(bool isOn)
-    {
-        this.isOn = isOn;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (isOn)
+        beaconID = Random.Range(0, 1000);
+        data = new List<SensorInformation>
         {
-            CollectData();
+            new SensorInformation { }
+        };
+    }
+    public void CollectData(Packet packet)
+    {
+        if (packet.beaconID != beaconID)
+        {
+            if (!data.Contains(packet.info))
+            {
+                data.Add(packet.info);
+                SignalFactory.CreateSignal(transform.position, packet, 5);
+            }
         }
     }
-    private void CollectData()
+    private void Update()
     {
-    }
-    private IEnumerator SpawnSignal()
-    {
-        while (true)
+        if (sendSignal)
         {
             Packet packet = new Packet
             {
                 beaconID = beaconID,
-                info = data[0],
+                info = new SensorInformation
+                {
+                    temp = 54,
+                },
             };
             SignalFactory.CreateSignal(transform.position, packet, 5);
-            yield return new WaitForSeconds(2);
+            sendSignal = false;
         }
     }
 }
