@@ -34,8 +34,6 @@ public class SignalController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger");
-        Debug.Log("collision occured:  tag was " + other.gameObject.tag);
         if (other.gameObject.CompareTag("Beacon"))
         {
             other.gameObject.GetComponent<BeaconController>().CollectData(packet);

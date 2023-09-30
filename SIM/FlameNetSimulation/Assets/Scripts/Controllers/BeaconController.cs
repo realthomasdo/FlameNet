@@ -49,7 +49,7 @@ public class BeaconController : MonoBehaviour
                 beaconID = beaconID,
                 info = new SensorInformation
                 {
-                    temp = 54,
+                    temp = Random.Range(0, 100000),
                 },
             };
             SignalFactory.CreateSignal(transform.position, packet, 5);
