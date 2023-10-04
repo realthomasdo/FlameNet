@@ -5,8 +5,8 @@ using UnityEngine;
 public struct Date
 {
     public int day;
-    private int month;
-    private int time; // 24 hour time 1200 is noon etc
+    public int month;
+    public int time; // 24 hour time 1200 is noon etc
 }
 public struct SensorInformation
 {
@@ -21,6 +21,7 @@ public class BeaconController : MonoBehaviour
     private int beaconID;
     private List<SensorInformation> data;
     [SerializeField] private bool sendSignal = false;
+    [SerializeField] private BeaconViewerController beaconUI;
     private void Start()
     {
         beaconID = Random.Range(0, 1000);
@@ -29,6 +30,7 @@ public class BeaconController : MonoBehaviour
             new SensorInformation { }
         };
         StartCoroutine(SendSignal());
+        beaconUI.Setup(beaconID);
     }
 
     private IEnumerator SendSignal()
@@ -60,10 +62,17 @@ public class BeaconController : MonoBehaviour
                 beaconID = beaconID,
                 info = new SensorInformation
                 {
-                    temp = Random.Range(0, 100000),
+                    temp = Random.Range(0, 100),
+                    humidity = Random.Range(0, 100),
+                    windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
+                    windSpeed = Random.Range(0, 100),
                 },
             };
-            SignalFactory.CreateSignal(transform.position, packet, 5);
+            beaconUI.UpdateInformation(packet.info);
+            if (beaconID == packet.beaconID)
+            {
+                SignalFactory.CreateSignal(transform.position, packet, 5);
+            }
             sendSignal = false;
         }
     }
