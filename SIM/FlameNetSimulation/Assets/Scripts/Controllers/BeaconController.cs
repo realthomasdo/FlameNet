@@ -28,7 +28,18 @@ public class BeaconController : MonoBehaviour
         {
             new SensorInformation { }
         };
+        StartCoroutine(SendSignal());
     }
+
+    private IEnumerator SendSignal()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(10, 70));
+            sendSignal = true;
+        }
+    }
+
     public void CollectData(Packet packet)
     {
         if (packet.beaconID != beaconID)
