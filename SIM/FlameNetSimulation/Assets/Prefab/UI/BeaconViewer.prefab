@@ -642,6 +642,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 119b1f8b67a66124f82e1537a6154c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  display: {fileID: 2683774982148073531}
   title: {fileID: 5254487209088269242}
   temp: {fileID: 6868027000697223799}
   humidity: {fileID: 8446938437845692606}

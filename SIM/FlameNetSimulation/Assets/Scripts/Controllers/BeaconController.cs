@@ -32,27 +32,6 @@ public class BeaconController : MonoBehaviour
         StartCoroutine(SendSignal());
         beaconUI.Setup(beaconID);
     }
-
-    private IEnumerator SendSignal()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(Random.Range(10, 70));
-            sendSignal = true;
-        }
-    }
-
-    public void CollectData(Packet packet)
-    {
-        if (packet.beaconID != beaconID)
-        {
-            if (!data.Contains(packet.info))
-            {
-                data.Add(packet.info);
-                SignalFactory.CreateSignal(transform.position, packet, 5);
-            }
-        }
-    }
     private void Update()
     {
         if (sendSignal)
@@ -76,4 +55,28 @@ public class BeaconController : MonoBehaviour
             sendSignal = false;
         }
     }
+    private IEnumerator SendSignal()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(10, 70));
+            sendSignal = true;
+        }
+    }
+    public void CollectData(Packet packet)
+    {
+        if (packet.beaconID != beaconID)
+        {
+            if (!data.Contains(packet.info))
+            {
+                data.Add(packet.info);
+                SignalFactory.CreateSignal(transform.position, packet, 5);
+            }
+        }
+    }
+    public void ToggleDisplay()
+    {
+        beaconUI.ToggleDisplay();
+    }
+
 }

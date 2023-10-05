@@ -9,11 +9,7 @@ public class BeaconViewerController : MonoBehaviour
 {
     [SerializeField] private GameObject display;
     [SerializeField] private TextMeshProUGUI title;
-    [Header("Information Text Meshes")]
-    [SerializeField] private TextMeshProUGUI temp;
-    [SerializeField] private TextMeshProUGUI humidity;
-    [SerializeField] private TextMeshProUGUI windDir;
-    [SerializeField] private TextMeshProUGUI windSpeed;
+    [SerializeField] private TextMeshProUGUI temp, humidity, windDir, windSpeed;
     private static string TEMP_TEXT_DEFAULT = "Temperature: ";
     private static string HUMIDITY_TEXT_DEFAULT = "Humidity: ";
     private static string WINDDIR_TEXT_DEFAULT = "Wind Direction: ";
@@ -21,7 +17,8 @@ public class BeaconViewerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        transform.SetParent(GameObject.FindAnyObjectByType<Canvas>().transform);
+        transform.SetParent(GameObject.FindGameObjectWithTag("WorldSpaceCanvas").transform);
+        display.SetActive(false);
     }
     void LateUpdate()
     {
@@ -31,9 +28,9 @@ public class BeaconViewerController : MonoBehaviour
     {
         title.text = "BeaconID: " + beaconID.ToString();
     }
-    public void SetActive(bool active)
+    public void ToggleDisplay()
     {
-        display.SetActive(active);
+        display.SetActive(!display.activeSelf);
     }
     public void UpdateInformation(SensorInformation latestInformation)
     {
