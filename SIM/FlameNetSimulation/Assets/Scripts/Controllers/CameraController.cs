@@ -36,8 +36,7 @@ public class CameraController : MonoBehaviour
     private void LeftClickAction(InputAction.CallbackContext callBack)
     {
         Ray ray = new Ray(transform.position, transform.forward);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100))
+        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider.gameObject.CompareTag("Beacon"))
             {
