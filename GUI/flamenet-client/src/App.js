@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Header from './components/Header';
+import Table from './components/Table';
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
       <body>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          <Table/>
         </p>
         <a
           className="App-link"
