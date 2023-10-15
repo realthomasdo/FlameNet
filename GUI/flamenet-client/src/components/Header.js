@@ -3,26 +3,23 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import StarIcon from '@mui/icons-material/Star';
-import Menu from '@material-ui/core/Menu'; 
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
-  // Initialize the "open" state and a function to handle menu opening/closing
-  const [open, setOpen] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  // Function to handle menu button click
-  const menuButtonClick = (event) => {
-    setOpen(event.currentTarget); // Toggle the "open" state when the menu button is clicked
-  }
-  const menuClose = () => {
-    setOpen(null); 
-  }
-  
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,37 +30,42 @@ export default function Header() {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
-            aria-controls={open ? 'basic-menu' : undefined}
+            aria-controls="basic-menu"
             aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={menuButtonClick}
+            aria-expanded={Boolean(anchorEl)}
+            onClick={handleMenuClick}
           >
             <MenuIcon />
           </IconButton>
 
-          {/*popup appears in weird spot */}
           <Menu
             id="basic-menu"
-            open={open}
-            onClose={menuClose}
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
             anchorOrigin={{
               vertical: 'bottom',
-              horizontal: 'left',
+              horizontal: 'right',
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'left',
+              horizontal: 'right',
             }}
+            getContentAnchorEl={null}
           >
-            
-            <MenuItem onClick={menuClose}>Page 1</MenuItem>
-            <MenuItem onClick={menuClose}>Page 2</MenuItem>
-            <MenuItem onClick={menuClose}>Page 3</MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <Link to="/main" style={{ textDecoration: 'none', color: 'inherit' }}>
+                Main Page
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={handleMenuClose}>
+              <Link to="/history" style={{ textDecoration: 'none', color: 'inherit' }}>
+                History Page
+              </Link>
+            </MenuItem>
           </Menu>
 
-
-          <Typography variant="h6" component="div" sx={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
             FlameNet
           </Typography>
           <IconButton
@@ -71,7 +73,7 @@ export default function Header() {
             edge="start"
             color="inherit"
             aria-label="star"
-            sx={{display:'flex', justifyContent: 'flex-end', alignItems:'center'}}
+            sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
           >
             <StarIcon />
           </IconButton>
