@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import NodeMarker from './NodeMarker';
 
 const containerStyle = {
   width: '100%',
-  height: '80vh'
+  height: 'calc(100vh - 100px)' // Adjust the margin as needed
 };
 
 const center = {
@@ -11,45 +12,46 @@ const center = {
   lng: -96.3232865
 };
 
-/*
+const zach = {
+  lat: 30.6210864,
+  lng: -96.3403882
+}
 
-Uses https://www.npmjs.com/package/@react-google-maps/api as a google
-maps api wrapper. Will need to add marker, pop-up windows, etc...
-
-*/
+const polo = {
+  lat: 30.6229681,
+  lng: -96.3383515
+}
 
 function MapComponent() {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyDDJxEAi7kcIqXxKIFxHn19CbewQwMfuEg" // do not expose this
-  })
+  });
 
-  const [map, setMap] = React.useState(null)
+  const [map, setMap] = React.useState(null);
 
   const onLoad = React.useCallback(function callback(map) {
-    // This is just an example of getting and using the map instance!!! don't just blindly copy!
     const bounds = new window.google.maps.LatLngBounds(center);
     map.fitBounds(bounds);
-
-    setMap(map)
-  }, [])
+    setMap(map);
+  }, []);
 
   const onUnmount = React.useCallback(function callback(map) {
-    setMap(null)
-  }, [])
+    setMap(null);
+  }, []);
 
   return isLoaded ? (
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={8}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
-      >
-        { /* Child components, such as markers, info windows, etc. */ }
-        <></>
-      </GoogleMap>
-  ) : <></>
+    <GoogleMap
+      mapContainerStyle={containerStyle}
+      center={center}
+      zoom={8}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+    >
+      <NodeMarker position={zach} />
+      <NodeMarker position={polo} />
+    </GoogleMap>
+  ) : <></>;
 }
 
-export default React.memo(MapComponent)
+export default React.memo(MapComponent);

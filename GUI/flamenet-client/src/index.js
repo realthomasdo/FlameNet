@@ -11,7 +11,7 @@ import ErrorPage from './pages/ErrorPage';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HistoryPage />, // change later to main page
+    element: <MainPage />, // change later to main page
     errorElement: <ErrorPage />
   },
   {

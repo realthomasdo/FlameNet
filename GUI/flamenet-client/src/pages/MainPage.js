@@ -7,11 +7,11 @@ function MainPage() {
   return (
     <div>
       <Header />
-      <Grid container justifyContent="center" alignItems="center" spacing={12}>
+      <Grid container justifyContent="center" alignItems="center" spacing={2}>
         <Grid item xs={12}>
-            {/* blank grid here */}
+          {/* blank grid here */}
         </Grid>
-        <Grid item xs={10} sx={{ height: '400px' }}>
+        <Grid item xs={10}>
           <MapComponent />
         </Grid>
       </Grid>
