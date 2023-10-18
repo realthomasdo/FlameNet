@@ -12,7 +12,7 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const logoUrl = '/flamenetlogo.png';
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -66,6 +66,9 @@ export default function Header() {
           </Menu>
 
           <Typography variant="h6" component="div" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <img src={logoUrl} alt="Flamenet Logo" style={{ width: '70px', height: 'auto', padding: '5px' }} />
+          </div>  
             FlameNet
           </Typography>
           <IconButton
