@@ -19,8 +19,11 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Movement();
-        Aiming();
+        if (Application.isFocused)
+        {
+            Movement();
+            Aiming();
+        }
     }
     private void Movement()
     {
@@ -38,7 +41,7 @@ public class CameraController : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
         {
-            if (hit.collider.gameObject.CompareTag("Beacon"))
+            if (hit.collider != null && hit.collider.gameObject.CompareTag("Beacon"))
             {
                 hit.collider.GetComponent<BeaconController>().ToggleDisplay();
             }
