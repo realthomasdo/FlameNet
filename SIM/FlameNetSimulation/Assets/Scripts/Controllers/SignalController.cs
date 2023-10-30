@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SignalType { OFFSHORE_REQUEST, OFFSHORE_RESPONSE, SENSOR_INFORMATION, TIMING_SETUP };
 public struct Packet
 {
     public int beaconID;
-    public SensorInformation info;
+    public object info;
+    public SignalType signalType;
+    public bool isPropogated;
 }
 public class SignalController : MonoBehaviour
 {
@@ -13,11 +16,20 @@ public class SignalController : MonoBehaviour
     private float distanceTraveled;
     [SerializeField] private float growthSpeed;
     [SerializeField] private Renderer myModel;
-    private Packet packet;
+    public Packet packet;
     public void SetValues(Packet packet, float maxDistance)
     {
         this.packet = packet;
         this.maxDistance = maxDistance;
+    }
+    public void SetValues(Packet packet, float maxDistance, Color color)
+    {
+        SetValues(packet, maxDistance);
+        myModel.material.color = color;
+    }
+    public Color GetColor()
+    {
+        return myModel.material.color;
     }
     // Update is called once per frame
     void Update()
@@ -36,7 +48,15 @@ public class SignalController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Beacon"))
         {
-            other.gameObject.GetComponent<BeaconController>().CollectData(packet);
+            BeaconController beacon = other.gameObject.GetComponent<BeaconController>();
+            if (beacon == null)
+            {
+                other.gameObject.GetComponent<OffshoreBeaconController>().ReceiveSignal(this);
+            }
+            else
+            {
+                beacon.ReceiveSignal(this);
+            }
         }
     }
 }
