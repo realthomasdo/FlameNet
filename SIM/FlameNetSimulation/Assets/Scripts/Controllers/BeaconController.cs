@@ -85,11 +85,14 @@ public class BeaconController : MonoBehaviour
     private int timingSize;
     private Date old;
     private Date currTime;
+    [SerializeField] private bool sendSignal;
     [SerializeField] private BeaconViewerController beaconUI;
+    [SerializeField] private BeaconConnectionsController beaconConnections;
     private void Start()
     {
         timingSpot = -1;
         beaconID = Random.Range(0, 100);
+        sendSignal = false;
         data = new List<SensorInformation>
         {
             new SensorInformation { }
@@ -98,6 +101,25 @@ public class BeaconController : MonoBehaviour
         old = new Date();
         currTime = new Date();
         StartCoroutine(TimePassing());
+    }
+    private void Update()
+    {
+        if (sendSignal)
+        {
+            ConnectToMesh();
+            sendSignal = false;
+        }
+    }
+    private void ConnectToMesh()
+    {
+        Packet packet = new Packet
+        {
+            beaconID = beaconID,
+            info = this,
+            signalType = SignalType.MESH_CONNECTION,
+            isPropogated = false,
+        };
+        SignalFactory.CreateSignal(transform.position, 5, packet);
     }
     private IEnumerator TimePassing()
     {

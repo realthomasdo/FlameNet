@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class OffshoreBeaconController : MonoBehaviour
 {
     private int beaconID = 0;
     [SerializeField] private bool sendSignal;
     private List<SensorInformation> data;
+    [SerializeField] private BeaconConnectionsController beaconConnections;
     private Date currTime;
     // Start is called before the first frame update
     void Start()
     {
         data = new List<SensorInformation>();
-        StartCoroutine(SetupTimings());
+        // StartCoroutine(SetupTimings());
         sendSignal = false;
         currTime = new Date();
         StartCoroutine(TimePassing());
@@ -44,6 +44,7 @@ public class OffshoreBeaconController : MonoBehaviour
     public void ReceiveSignal(SignalController signal)
     {
         Packet packet = signal.packet;
+        Debug.Log(packet.signalType);
         switch (packet.signalType)
         {
             case SignalType.OFFSHORE_RESPONSE:
@@ -55,6 +56,10 @@ public class OffshoreBeaconController : MonoBehaviour
                         data.Add(sensorInfo);
                     }
                 });
+                break;
+            case SignalType.MESH_CONNECTION:
+                BeaconController beacon = (BeaconController)packet.info;
+                beaconConnections.AddConnection(beacon);
                 break;
         }
     }
