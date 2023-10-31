@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SignalType { OFFSHORE_REQUEST, OFFSHORE_RESPONSE, SENSOR_INFORMATION, TIMING_SETUP, MESH_CONNECTION };
+public enum SignalType { MESH_CONNECTION, DIRECT_SIGNAL };
 public struct Packet
 {
     public int beaconID;
@@ -49,11 +49,11 @@ public class SignalController : MonoBehaviour
         if (other.gameObject.CompareTag("Beacon"))
         {
             BeaconController beacon = other.gameObject.GetComponent<BeaconController>();
-            beacon.ReceiveSignal(this);
+            beacon.ReceiveSignal(packet);
         }
-        else if (other.gameObject.CompareTag("Offshore Beacon"))
+        else if (other.gameObject.CompareTag("MasterBeacon"))
         {
-            other.gameObject.GetComponent<OffshoreBeaconController>().ReceiveSignal(this);
+            other.gameObject.GetComponent<MasterBeaconController>().ReceiveSignal(packet);
         }
     }
 }

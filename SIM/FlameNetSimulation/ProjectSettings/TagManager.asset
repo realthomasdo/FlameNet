@@ -7,6 +7,7 @@ TagManager:
   - Beacon
   - WorldSpaceCanvas
   - Offshore Beacon
+  - MasterBeacon
   layers:
   - Default
   - TransparentFX
