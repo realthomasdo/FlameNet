@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class MasterBeaconController : BeaconController
 {
+    [SerializeField] private ChartsController charts;
     void Start()
     {
         beaconID = 0;
         beaconConnections.AddParentConnection(this);
-        data = new List<SensorInformation>();
         sendSignal = false;
         currTime = new Date();
         StartCoroutine(TimePassing());
@@ -29,12 +29,13 @@ public class MasterBeaconController : BeaconController
             sendSignal = false;
         }
     }
-    new public void ReceiveSignal(Packet packet)
+    public override void ReceiveSignal(Packet packet)
     {
         switch (packet.signalType)
         {
             case SignalType.DIRECT_SIGNAL:
-                data.Add((SensorInformation)packet.info);
+                SensorInformation sensorInfo = (SensorInformation)packet.info;
+                charts.AddData(packet.beaconID, sensorInfo);
                 break;
             case SignalType.MESH_CONNECTION:
                 BeaconController beacon = (BeaconController)packet.info;

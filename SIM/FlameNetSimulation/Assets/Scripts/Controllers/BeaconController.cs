@@ -24,6 +24,10 @@ public struct Date
             }
         }
     }
+    public int GetFullTime()
+    {
+        return month * 1000000 + day * 10000 + hour;
+    }
     public static bool operator <(Date x, Date y)
     {
         if (x.month < y.month)
@@ -88,7 +92,7 @@ public class BeaconController : MonoBehaviour
     [SerializeField] protected BeaconConnectionsController beaconConnections;
     private void Start()
     {
-        beaconID = Random.Range(0, 100);
+        beaconID = Random.Range(0, 1000);
         sendSignal = false;
         data = new List<SensorInformation>
         {
@@ -109,7 +113,6 @@ public class BeaconController : MonoBehaviour
     private IEnumerator Searching()
     {
         searching = true;
-        yield return new WaitForSeconds(3);
         Packet packet = new Packet
         {
             beaconID = beaconID,
@@ -118,6 +121,7 @@ public class BeaconController : MonoBehaviour
             isPropogated = false,
         };
         SignalFactory.CreateSignal(transform.position, 5, packet);
+        yield return new WaitForSeconds(3);
         searching = false;
     }
     private IEnumerator TimePassing()
@@ -139,7 +143,7 @@ public class BeaconController : MonoBehaviour
                 info = new SensorInformation
                 {
                     time = currTime,
-                    temp = Random.Range(0, 100),
+                    temp = Random.Range(70, 80),
                     humidity = Random.Range(0, 100),
                     windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
                     windSpeed = Random.Range(0, 100),
@@ -149,10 +153,10 @@ public class BeaconController : MonoBehaviour
             };
             beaconUI.UpdateInformation((SensorInformation)packet.info);
             beaconConnections.SendDirectSignal(this, packet);
-            yield return new WaitForSeconds(Random.Range(0, 10));
+            yield return new WaitForSeconds(Random.Range(2, 10));
         }
     }
-    public void ReceiveSignal(Packet packet)
+    public virtual void ReceiveSignal(Packet packet)
     {
         switch (packet.signalType)
         {
@@ -170,7 +174,6 @@ public class BeaconController : MonoBehaviour
     }
     public virtual bool isConnectedToMesh()
     {
-        Debug.Log(beaconID);
         return beaconConnections.isConnectedToMesh();
     }
     public void AddParentConnection(BeaconController beacon)
