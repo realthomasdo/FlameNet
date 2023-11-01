@@ -22,4 +22,11 @@ public class SignalFactory : MonoBehaviour
         signalPropogated.SetValues(packet, maxDistance, color);
         return signal;
     }
+    public static DirectSignalController CreateDirectSignal(BeaconController start, BeaconController end, Packet packet)
+    {
+        GameObject signalObject = Instantiate(GameAssets.i.DirectSignalPrefab, start.transform.position, Quaternion.identity);
+        DirectSignalController signal = signalObject.GetComponent<DirectSignalController>();
+        signal.SetValues(start, end, packet);
+        return signal;
+    }
 }

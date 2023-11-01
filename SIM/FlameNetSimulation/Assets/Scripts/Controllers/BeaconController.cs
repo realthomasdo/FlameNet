@@ -24,6 +24,10 @@ public struct Date
             }
         }
     }
+    public int GetFullTime()
+    {
+        return month * 1000000 + day * 10000 + hour;
+    }
     public static bool operator <(Date x, Date y)
     {
         if (x.month < y.month)
@@ -79,25 +83,46 @@ public struct SensorInformation
 }
 public class BeaconController : MonoBehaviour
 {
-    private int beaconID;
-    private List<SensorInformation> data;
-    private int timingSpot;
-    private int timingSize;
-    private Date old;
-    private Date currTime;
-    [SerializeField] private BeaconViewerController beaconUI;
+    protected int beaconID;
+    protected List<SensorInformation> data;
+    protected Date currTime;
+    private bool searching;
+    [SerializeField] protected bool sendSignal;
+    [SerializeField] protected BeaconViewerController beaconUI;
+    [SerializeField] protected BeaconConnectionsController beaconConnections;
     private void Start()
     {
-        timingSpot = -1;
-        beaconID = Random.Range(0, 100);
+        beaconID = Random.Range(0, 1000);
+        sendSignal = false;
         data = new List<SensorInformation>
         {
             new SensorInformation { }
         };
         beaconUI.SetupID(beaconID);
-        old = new Date();
         currTime = new Date();
         StartCoroutine(TimePassing());
+        StartCoroutine(SendSignal());
+    }
+    private void Update()
+    {
+        if (!searching && !beaconConnections.hasParent())
+        {
+            StartCoroutine(Searching());
+        }
+    }
+    private IEnumerator Searching()
+    {
+        searching = true;
+        Packet packet = new Packet
+        {
+            beaconID = beaconID,
+            info = this,
+            signalType = SignalType.MESH_CONNECTION,
+            isPropogated = false,
+        };
+        SignalFactory.CreateSignal(transform.position, 5, packet);
+        yield return new WaitForSeconds(3);
+        searching = false;
     }
     private IEnumerator TimePassing()
     {
@@ -109,7 +134,7 @@ public class BeaconController : MonoBehaviour
     }
     private IEnumerator SendSignal()
     {
-        yield return new WaitForSeconds(5 * timingSpot);
+        yield return new WaitForSeconds(Random.Range(0, 10));
         while (true)
         {
             Packet packet = new Packet
@@ -118,80 +143,54 @@ public class BeaconController : MonoBehaviour
                 info = new SensorInformation
                 {
                     time = currTime,
-                    temp = Random.Range(0, 100),
+                    temp = Random.Range(70, 80),
                     humidity = Random.Range(0, 100),
                     windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
                     windSpeed = Random.Range(0, 100),
                 },
-                signalType = SignalType.SENSOR_INFORMATION,
+                signalType = SignalType.DIRECT_SIGNAL,
                 isPropogated = false,
             };
             beaconUI.UpdateInformation((SensorInformation)packet.info);
-            if (beaconID == packet.beaconID)
-            {
-                SignalFactory.CreateSignal(transform.position, 5, packet);
-            }
-            yield return new WaitForSeconds(5 * timingSize);
+            beaconConnections.SendDirectSignal(this, packet);
+            yield return new WaitForSeconds(Random.Range(2, 10));
         }
     }
-    public void ReceiveSignal(SignalController signal)
+    public virtual void ReceiveSignal(Packet packet)
     {
-        Packet packet = signal.packet;
         switch (packet.signalType)
         {
-            case SignalType.SENSOR_INFORMATION:
-                if (packet.beaconID != beaconID)
-                {
-                    SensorInformation sensorInfo = (SensorInformation)packet.info;
-                    if (sensorInfo.time > old && !data.Contains(sensorInfo))
-                    {
-                        data.Add(sensorInfo);
-                        SignalFactory.CreateSignal(transform.position, 5, signal);
-                    }
-                }
+            case SignalType.DIRECT_SIGNAL:
+                beaconConnections.SendDirectSignal(this, packet);
                 break;
-            case SignalType.TIMING_SETUP:
-                if (timingSpot == -1)
+            case SignalType.MESH_CONNECTION:
+                BeaconController beacon = (BeaconController)packet.info;
+                if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
                 {
-                    List<int> spots = (List<int>)packet.info;
-                    for (int i = 0; i < spots.Count; i++)
-                    {
-                        if (spots[i] == beaconID)
-                        {
-                            timingSpot = i;
-                            timingSize = spots.Count;
-                            beaconUI.SetupTiming(timingSpot * 5);
-                            SignalFactory.CreateSignal(transform.position, 5, signal);
-                            StartCoroutine(SendSignal());
-                            return;
-                        }
-                    }
-                }
-                break;
-            case SignalType.OFFSHORE_REQUEST:
-                if (!packet.isPropogated)
-                {
-                    Packet sensorInfo = new Packet
-                    {
-                        beaconID = beaconID,
-                        info = data,
-                        signalType = SignalType.OFFSHORE_RESPONSE,
-                        isPropogated = false
-                    };
-                    SignalFactory.CreateSignal(transform.position, 5, sensorInfo);
-                }
-                if (data.Count > 0)
-                {
-                    data.Clear();
-                    SignalFactory.CreateSignal(transform.position, 5, signal);
-                    old = (Date)packet.info;
+                    beacon.AddParentConnection(this);
                 }
                 break;
         }
+    }
+    public virtual bool isConnectedToMesh()
+    {
+        return beaconConnections.isConnectedToMesh();
+    }
+    public void AddParentConnection(BeaconController beacon)
+    {
+        beaconConnections.AddParentConnection(beacon);
+    }
+    public void RemoveParentConnection()
+    {
+        beaconConnections.RemoveParentConnection();
+    }
+
+    public bool hasParent()
+    {
+        return beaconConnections.hasParent();
     }
     public void ToggleDisplay()
     {
         beaconUI.ToggleDisplay();
     }
-
 }

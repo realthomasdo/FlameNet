@@ -2,6 +2,7 @@ using UnityEngine;
 public class GameAssets : MonoBehaviour
 {
     public GameObject SignalPrefab;
+    public GameObject DirectSignalPrefab;
 
     private static GameAssets _i;
 

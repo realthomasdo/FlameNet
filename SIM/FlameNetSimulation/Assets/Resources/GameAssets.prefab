@@ -46,3 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SignalPrefab: {fileID: 5692504080162834672, guid: 83b520aec3bfe1c42bf96c3d6453c8cf,
     type: 3}
+  DirectSignalPrefab: {fileID: 5692504080162834672, guid: 8800457919b5dab43853157ab08bc2ef,
+    type: 3}
