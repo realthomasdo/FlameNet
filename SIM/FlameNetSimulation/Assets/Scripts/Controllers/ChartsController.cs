@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
@@ -12,13 +13,14 @@ public class ChartsController : MonoBehaviour
     [SerializeField] private List<LineChart> charts;
     [SerializeField] private List<DataType> dataTypes;
     private List<(int beaconID, SensorInformation info)> data;
-    [SerializeField] private InputActionReference toggleTempGraph;
+    [SerializeField] private GameObject display;
+    [SerializeField] private InputActionReference toggleGraphs;
 
     // Start is called before the first frame update
     void Start()
     {
         data = new List<(int beaconID, SensorInformation info)>();
-        toggleTempGraph.action.performed += ToggleTemperatureGraph;
+        toggleGraphs.action.performed += ToggleDisplay;
     }
     public void AddData(int beaconID, SensorInformation sensorData)
     {
@@ -40,16 +42,17 @@ public class ChartsController : MonoBehaviour
                 case DataType.TEMPERATURE:
                     charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.temp);
                     break;
+                case DataType.HUMIDITY:
+                    charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.humidity);
+                    break;
+                case DataType.WIND_SPEED:
+                    charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.windSpeed);
+                    break;
             }
         }
     }
-    private void ToggleTemperatureGraph(InputAction.CallbackContext context)
+    private void ToggleDisplay(InputAction.CallbackContext context)
     {
-        ToggleDisplay((int)DataType.TEMPERATURE);
-    }
-    public void ToggleDisplay(int type)
-    {
-        GameObject chart = charts[dataTypes.FindIndex(dataType => dataType == (DataType)type)].gameObject;
-        chart.SetActive(!chart.activeSelf);
+        display.SetActive(!display.activeSelf);
     }
 }
