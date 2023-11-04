@@ -27,7 +27,7 @@ function MapComponent() {
     const fetchNodes = async () => {
       try {
         console.log("Enter try");
-        const response = await fetch('http://localhost:3001/api/getNodes'); // Replace with your server's endpoint
+        const response = await fetch('http://localhost:3001/api/getNodes');
         const data = await response.json();
         setNodes(data);
         console.log("Exit try");
