@@ -1,6 +1,8 @@
 import React from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import NodeMarker from './NodeMarker';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 const containerStyle = {
   width: '100%',
@@ -12,16 +14,6 @@ const center = {
   lng: -96.3232865
 };
 
-const zach = {
-  lat: 30.6210864,
-  lng: -96.3403882
-}
-
-const polo = {
-  lat: 30.6229681,
-  lng: -96.3383515
-}
-
 function MapComponent() {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -29,6 +21,30 @@ function MapComponent() {
   });
 
   const [map, setMap] = React.useState(null);
+  const [nodes, setNodes] = useState([]);
+
+  useEffect(() => {
+    const fetchNodes = async () => {
+      try {
+        console.log("Enter try");
+        const response = await fetch('http://localhost:3001/api/getNodes'); // Replace with your server's endpoint
+        const data = await response.json();
+        setNodes(data);
+        console.log("Exit try");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Implement long polling by repeatedly fetching data
+    const pollInterval = 1000; // 1 second (adjust as needed)
+    const pollData = () => {
+      fetchNodes();
+      setTimeout(pollData, pollInterval);
+    };
+
+    pollData();
+  }, []);
 
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds(center);
@@ -48,8 +64,17 @@ function MapComponent() {
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
-      <NodeMarker position={zach} />
-      <NodeMarker position={polo} />
+      {nodes.map((node) => (
+        <NodeMarker
+          key={node.nodeId}
+          position={{ lat: node.latitude, lng: node.longitude }}
+          temperature={node.temperature}
+          humidity={node.humidity}
+          timestamp={node.timestamp}
+          co2Level={node.co2Level}
+          ppm={node.ppm}
+        />
+      ))}
     </GoogleMap>
   ) : <></>;
 }

@@ -1,27 +1,45 @@
+const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
+const Node = require('./models/node');
+
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 3001;
 
-// Middleware
-app.use(express.json()); // Parse JSON requests
+// Enable CORS for all routes
+app.use(cors());
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost/your-database-name', {
+// Connect to MongoDB
+mongoose.connect('mongodb+srv://flamenet-admin:H4uYO7SkVwb2e4wH@cluster0.2nnxixp.mongodb.net/flamenet-db', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
 });
 
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully');
+app.use(express.json());
+
+// Create a new node
+app.post('/api/nodes', async (req, res) => {
+  try {
+    const newNode = new Node(req.body);
+    await newNode.save();
+    res.status(201).json(newNode);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-// Define your API routes here
-// Example:
-// app.use('/api/users', require('./routes/userRoutes'));
+// Get all nodes
+app.get('/api/getNodes', async (req, res) => {
+  try {
+    const nodes = await Node.find();
+    res.json(nodes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
