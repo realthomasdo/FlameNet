@@ -191,6 +191,13 @@ public class BeaconController : MonoBehaviour
     }
     public void ToggleDisplay()
     {
-        beaconUI.ToggleDisplay();
+        if (beaconUI.ToggleDisplay())
+        {
+            ChartsController.i.AddBeaconToTrack(beaconID);
+        }
+        else
+        {
+            ChartsController.i.RemoveBeaconToTrack(beaconID);
+        }
     }
 }
