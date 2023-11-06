@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,22 +5,18 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float mouseSensitivity;
-    [SerializeField] private InputActionReference movement, aiming, leftClick;
-    // Start is called before the first frame update
+    [SerializeField] private InputActionReference movement, rotation, leftClick;
+    [SerializeField] private GameObject camera;
     void Start()
     {
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
         leftClick.action.performed += LeftClickAction;
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (Application.isFocused)
         {
-            // Movement();
-            // Aiming();
+            Movement();
+            Rotation();
         }
     }
     private void Movement()
@@ -30,16 +24,13 @@ public class CameraController : MonoBehaviour
         Vector3 moveDir = movement.action.ReadValue<Vector3>().normalized;
         transform.Translate(moveDir * moveSpeed * Time.deltaTime);
     }
-    private void Aiming()
+    private void Rotation()
     {
-        Vector2 mouseDelta = aiming.action.ReadValue<Vector2>();
-
-        transform.localEulerAngles += new Vector3(-mouseDelta.y, mouseDelta.x, 0) * mouseSensitivity * Time.deltaTime;
+        transform.Rotate(0, rotation.action.ReadValue<float>() * mouseSensitivity, 0);
     }
     private void LeftClickAction(InputAction.CallbackContext callBack)
     {
-        Ray ray = new Ray(transform.position, transform.forward);
-        if (Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Beacon"))
             {

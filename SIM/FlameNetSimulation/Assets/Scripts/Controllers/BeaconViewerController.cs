@@ -33,9 +33,10 @@ public class BeaconViewerController : MonoBehaviour
     {
         timing.text = TIMING_TEXT_DEFAULT + time.ToString();
     }
-    public void ToggleDisplay()
+    public bool ToggleDisplay()
     {
         display.SetActive(!display.activeSelf);
+        return display.activeSelf;
     }
     public void UpdateInformation(SensorInformation latestInformation)
     {

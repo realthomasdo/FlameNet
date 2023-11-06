@@ -35,7 +35,7 @@ public class MasterBeaconController : BeaconController
         {
             case SignalType.DIRECT_SIGNAL:
                 SensorInformation sensorInfo = (SensorInformation)packet.info;
-                charts.AddData(packet.beaconID, sensorInfo);
+                charts.AddData(packet.beaconID, sensorInfo, true);
                 break;
             case SignalType.MESH_CONNECTION:
                 BeaconController beacon = (BeaconController)packet.info;

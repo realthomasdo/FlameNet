@@ -6,15 +6,6 @@
             "id": "88baaee5-442f-41b1-859d-b6070f046b51",
             "actions": [
                 {
-                    "name": "Aiming",
-                    "type": "Value",
-                    "id": "9363da7e-421d-431a-a5e7-1a9abe510b69",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Movement",
                     "type": "Value",
                     "id": "742c6bf5-4fa9-4fd3-98b4-9dc60290bcd8",
@@ -33,27 +24,25 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleTemperatureGraph",
+                    "name": "ToggleGraphs",
                     "type": "Button",
                     "id": "9aa224b7-c0c9-418c-b53c-96fd15108966",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Value",
+                    "id": "47703da5-5e99-4554-8f6b-ba1a44ad8d96",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "afce8ba9-7234-432d-a0d3-64823ea7eb3d",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse&Keyboard",
-                    "action": "Aiming",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "3D Vector",
                     "id": "06156726-bb56-47c9-b8d9-fa2e50d1c265",
@@ -149,9 +138,53 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse&Keyboard",
-                    "action": "ToggleTemperatureGraph",
+                    "action": "ToggleGraphs",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "Axis Modifier",
+                    "id": "06c022b4-d1c4-42f5-99ef-2cba4efa3c56",
+                    "path": "AxisModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "7ca070ac-0d51-4634-a90f-2e874dab78ea",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "negative",
+                    "id": "680c4a5b-1786-4375-8c51-f9a2d0566e17",
+                    "path": "<Mouse>/delta/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "961cfb29-5ae0-4e5b-9ff4-1348dd8f2353",
+                    "path": "<Mouse>/delta/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
