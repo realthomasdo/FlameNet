@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 
+import globeIcon from './globe.png';
+
 function NodeMarker({ position, info, temperature, humidity, timestamp, co2Level, ppm }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -8,8 +10,14 @@ function NodeMarker({ position, info, temperature, humidity, timestamp, co2Level
     setIsOpen(!isOpen);
   };
 
+  // TODO: set to only master
+  const masterMarkerIcon = {
+    url: globeIcon, 
+    scaledSize: new window.google.maps.Size(35, 35), // Adjust the size as needed
+  };
+
   return (
-    <Marker position={position} onClick={handleMarkerClick}>
+    <Marker position={position} icon={masterMarkerIcon} onClick={handleMarkerClick}>
       {isOpen && (
         <InfoWindow onCloseClick={() => setIsOpen(false)}>
           <div>
