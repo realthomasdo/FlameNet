@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const nodeSchema = new mongoose.Schema({
+const nodeLogSchema = new mongoose.Schema({
   nodeId: {
     type: String,
     required: true,
@@ -8,10 +8,9 @@ const nodeSchema = new mongoose.Schema({
   timestamp: {
     type: Date,
   },
-  isMasterNode: {
-    type: Boolean,
-    required: true,
-    default: false,
+  commitTimestamp: {
+    type: Date,
+    default: Date.now, // Default value is the current timestamp when the log is created
   },
   latitude: {
     type: Number,
@@ -37,9 +36,13 @@ const nodeSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-}, { collection: 'nodes' });
+  isMasterNode: {
+    type: Boolean,
+    default: false,
+  },
+}, { collection: 'nodeLogs' }); // You can change the collection name if needed
 
-// Create a Node model based on the schema
-const Node = mongoose.model('Node', nodeSchema);
+// Create a NodeLog model based on the schema
+const NodeLog = mongoose.model('NodeLog', nodeLogSchema);
 
-module.exports = Node;
+module.exports = NodeLog;

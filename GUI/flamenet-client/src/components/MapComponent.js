@@ -26,11 +26,9 @@ function MapComponent() {
   useEffect(() => {
     const fetchNodes = async () => {
       try {
-        console.log("Enter try");
         const response = await fetch('http://localhost:3001/api/getNodes');
         const data = await response.json();
         setNodes(data);
-        console.log("Exit try");
       } catch (error) {
         console.error(error);
       }
