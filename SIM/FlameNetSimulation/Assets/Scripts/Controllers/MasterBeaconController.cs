@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MasterBeaconController : BeaconController
 {
@@ -34,14 +35,20 @@ public class MasterBeaconController : BeaconController
         switch (packet.signalType)
         {
             case SignalType.DIRECT_SIGNAL:
-                SensorInformation sensorInfo = (SensorInformation)packet.info;
-                charts.AddData(packet.beaconID, sensorInfo, true);
+                if (packet.info is SensorInformation)
+                {
+                    SensorInformation sensorInfo = (SensorInformation)packet.info;
+                    charts.AddData(packet.beaconID, sensorInfo, true);
+                }
                 break;
             case SignalType.MESH_CONNECTION:
-                BeaconController beacon = (BeaconController)packet.info;
-                if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                if (packet.info is BeaconController)
                 {
-                    beacon.AddParentConnection(this);
+                    BeaconController beacon = (BeaconController)packet.info;
+                    if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                    {
+                        beacon.AddParentConnection(this);
+                    }
                 }
                 break;
         }

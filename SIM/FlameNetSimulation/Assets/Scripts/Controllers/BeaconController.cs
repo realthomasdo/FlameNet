@@ -137,19 +137,21 @@ public class BeaconController : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(0, 10));
         while (true)
         {
+            Debug.Log("Beacon " + beaconID.ToString() + " sending signal");
             Packet packet = new Packet
             {
                 beaconID = beaconID,
-                info = new SensorInformation
-                {
-                    time = currTime,
-                    temp = Random.Range(70, 80),
-                    humidity = Random.Range(0, 100),
-                    windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
-                    windSpeed = Random.Range(0, 100),
-                },
-                signalType = SignalType.DIRECT_SIGNAL,
-                isPropogated = false,
+                //     info = new SensorInformation
+                //     {
+                //         time = currTime,
+                //         temp = Random.Range(70, 80),
+                //         humidity = Random.Range(0, 100),
+                //         windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
+                //         windSpeed = Random.Range(0, 100),
+                //     },
+                //     signalType = SignalType.DIRECT_SIGNAL,
+                //     isPropogated = false,
+                info = GridController.instance.GetSensorInfo(transform.position),
             };
             beaconUI.UpdateInformation((SensorInformation)packet.info);
             beaconConnections.SendDirectSignal(this, packet);
@@ -164,10 +166,13 @@ public class BeaconController : MonoBehaviour
                 beaconConnections.SendDirectSignal(this, packet);
                 break;
             case SignalType.MESH_CONNECTION:
-                BeaconController beacon = (BeaconController)packet.info;
-                if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                if (packet.info is BeaconController)
                 {
-                    beacon.AddParentConnection(this);
+                    BeaconController beacon = (BeaconController)packet.info;
+                    if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                    {
+                        beacon.AddParentConnection(this);
+                    }
                 }
                 break;
         }
