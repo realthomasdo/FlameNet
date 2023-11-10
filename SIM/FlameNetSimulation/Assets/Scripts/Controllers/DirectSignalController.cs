@@ -8,12 +8,17 @@ public class DirectSignalController : MonoBehaviour
     private BeaconController end;
     private float percentTraveled;
     private Packet packet;
+    [SerializeField] private Renderer myModel;
     public void SetValues(BeaconController start, BeaconController end, Packet packet)
     {
         this.start = start;
         this.end = end;
         this.packet = packet;
         percentTraveled = 0;
+        if (packet.signalType == SignalType.DISTRESS)
+        {
+            myModel.material.color = Color.red;
+        }
     }
 
     // Update is called once per frame

@@ -152,6 +152,7 @@ public class BeaconController : MonoBehaviour
                 //     signalType = SignalType.DIRECT_SIGNAL,
                 //     isPropogated = false,
                 info = GridController.instance.GetSensorInfo(transform.position),
+                signalType = (SignalType)Random.Range(1, 3),
             };
             beaconUI.UpdateInformation((SensorInformation)packet.info);
             beaconConnections.SendDirectSignal(this, packet);
@@ -162,7 +163,8 @@ public class BeaconController : MonoBehaviour
     {
         switch (packet.signalType)
         {
-            case SignalType.DIRECT_SIGNAL:
+            case SignalType.DIRECT:
+            case SignalType.DISTRESS:
                 beaconConnections.SendDirectSignal(this, packet);
                 break;
             case SignalType.MESH_CONNECTION:

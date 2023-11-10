@@ -36,7 +36,6 @@ public class GridController : MonoBehaviour
                 gameGrid[x, y] = Instantiate(gridCellPrefab, new Vector3(x * GridSpaceSize, 0, y * GridSpaceSize), Quaternion.identity).GetComponent<GridCell>();
                 gameGrid[x, y].SetPosition(x, y);
                 gameGrid[x, y].transform.SetParent(transform, false);
-                gameGrid[x, y].gameObject.name = "Grid Space ( X: " + x.ToString() + " , Y: " + y.ToString() + ")";
             }
         }
     }
@@ -55,7 +54,6 @@ public class GridController : MonoBehaviour
             {
                 if (position.x < gameGrid[x, y].transform.position.x && position.z < gameGrid[x, y].transform.position.z)
                 {
-                    Debug.Log("Grid Position: " + gameGrid[x, y].GetPosition());
                     return gameGrid[x, y].GetSensorInformation();
                 }
             }

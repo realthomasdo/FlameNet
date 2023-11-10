@@ -34,12 +34,14 @@ public class MasterBeaconController : BeaconController
     {
         switch (packet.signalType)
         {
-            case SignalType.DIRECT_SIGNAL:
+            case SignalType.DIRECT:
                 if (packet.info is SensorInformation)
                 {
                     SensorInformation sensorInfo = (SensorInformation)packet.info;
                     charts.AddData(packet.beaconID, sensorInfo, true);
                 }
+                break;
+            case SignalType.DISTRESS:
                 break;
             case SignalType.MESH_CONNECTION:
                 if (packet.info is BeaconController)
