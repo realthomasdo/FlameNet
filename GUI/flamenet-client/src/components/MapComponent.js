@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import NodeMarker from './NodeMarker';
-import { useEffect } from 'react';
-import { useState } from 'react';
 
 const containerStyle = {
   width: '100%',
@@ -14,14 +12,16 @@ const center = {
   lng: -96.3232865
 };
 
-function MapComponent() {
+const MapComponent = () => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyDDJxEAi7kcIqXxKIFxHn19CbewQwMfuEg" // do not expose this
+    googleMapsApiKey: "AIzaSyDDJxEAi7kcIqXxKIFxHn19CbewQwMfuEg"
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = useState(null);
   const [nodes, setNodes] = useState([]);
+  const [mapCenter, setMapCenter] = useState(center);
+  const [mapCenterManuallyChanged, setMapCenterManuallyChanged] = useState(false);
 
   useEffect(() => {
     const fetchNodes = async () => {
@@ -29,44 +29,49 @@ function MapComponent() {
         const response = await fetch('http://localhost:3001/api/getNodes');
         const data = await response.json();
         setNodes(data);
+
+        if (!mapCenterManuallyChanged) {
+          const firstMasterNode = data.find(node => node.isMasterNode);
+          if (firstMasterNode) {
+            setMapCenter({ lat: firstMasterNode.latitude, lng: firstMasterNode.longitude });
+          }
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    // Implement long polling by repeatedly fetching data
-    const pollInterval = 1000; // 1 second (adjust as needed)
+    const pollInterval = 1000;
     const pollData = () => {
       fetchNodes();
-      setTimeout(pollData, pollInterval);
     };
 
-    pollData();
-  }, []);
+    const pollIntervalId = setInterval(pollData, pollInterval);
 
-  const onLoad = React.useCallback(function callback(map) {
+    return () => clearInterval(pollIntervalId);
+  }, [mapCenterManuallyChanged]);
+
+  const onLoad = useCallback((map) => {
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback() {
+  const onUnmount = useCallback(() => {
     setMap(null);
   }, []);
 
-  // Find the first master node
-  const firstMasterNode = nodes.find(node => node.isMasterNode);
-
-  // Set the initial center based on the first master node's position
-  const initialCenter = firstMasterNode
-    ? { lat: firstMasterNode.latitude, lng: firstMasterNode.longitude }
-    : { lat: 30.6375624, lng: -96.3232865 }; // Default center if no master node is found
+  const handleMapDrag = () => {
+    setMapCenterManuallyChanged(true);
+  };
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={initialCenter}
+      center={mapCenter}
       zoom={16}
       onLoad={onLoad}
       onUnmount={onUnmount}
+      draggable={true}
+      onDragEnd={handleMapDrag}
     >
       {nodes.map((node) => (
         <NodeMarker
@@ -83,6 +88,6 @@ function MapComponent() {
       ))}
     </GoogleMap>
   ) : <></>;
-}
+};
 
 export default React.memo(MapComponent);
