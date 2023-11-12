@@ -45,20 +45,26 @@ function MapComponent() {
   }, []);
 
   const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback() {
     setMap(null);
   }, []);
+
+  // Find the first master node
+  const firstMasterNode = nodes.find(node => node.isMasterNode);
+
+  // Set the initial center based on the first master node's position
+  const initialCenter = firstMasterNode
+    ? { lat: firstMasterNode.latitude, lng: firstMasterNode.longitude }
+    : { lat: 30.6375624, lng: -96.3232865 }; // Default center if no master node is found
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={center}
-      zoom={8}
+      center={initialCenter}
+      zoom={16}
       onLoad={onLoad}
       onUnmount={onUnmount}
     >
@@ -71,6 +77,8 @@ function MapComponent() {
           timestamp={node.timestamp}
           co2Level={node.co2Level}
           ppm={node.ppm}
+          isMasterNode={node.isMasterNode}
+          fireDetected={node.fireDetected}
         />
       ))}
     </GoogleMap>
