@@ -26,7 +26,7 @@ const MapComponent = () => {
   useEffect(() => {
     const fetchNodes = async () => {
       try {
-        const response = await fetch('http://flamenet-server.onrender.com/api/getNodes');
+        const response = await fetch('https://flamenet-server.onrender.com/api/getNodes');
         const data = await response.json();
         setNodes(data);
 
