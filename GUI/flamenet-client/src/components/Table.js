@@ -66,7 +66,7 @@ const DataTable = () => {
   );
 
   useEffect(() => {
-    fetch('https://flamenet-server.onrender.com/api/getNodeLogs')
+    fetch('http://flamenet-server.onrender.com/api/getNodeLogs')
       .then((response) => response.json())
       .then((apiData) => {
         console.log(apiData);
