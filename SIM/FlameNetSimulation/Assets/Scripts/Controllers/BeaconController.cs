@@ -92,15 +92,7 @@ public class BeaconController : MonoBehaviour
     [SerializeField] protected BeaconConnectionsController beaconConnections;
     private void Start()
     {
-        beaconID = Random.Range(0, 1000);
-        sendSignal = false;
-        data = new List<SensorInformation>
-        {
-            new SensorInformation { }
-        };
-        beaconUI.SetupID(beaconID);
-        currTime = new Date();
-        StartCoroutine(TimePassing());
+        SetupBeacon();
         StartCoroutine(SendSignal());
     }
     private void Update()
@@ -110,6 +102,18 @@ public class BeaconController : MonoBehaviour
             StartCoroutine(Searching());
         }
     }
+    protected void SetupBeacon()
+    {
+        beaconID = Random.Range(0, 1000);
+        sendSignal = false;
+        data = new List<SensorInformation>
+        {
+            new SensorInformation { }
+        };
+        beaconUI.SetupID(beaconID);
+        currTime = new Date();
+        StartCoroutine(TimePassing());
+    }
     private IEnumerator Searching()
     {
         searching = true;
@@ -118,7 +122,6 @@ public class BeaconController : MonoBehaviour
             beaconID = beaconID,
             info = this,
             signalType = SignalType.MESH_CONNECTION,
-            isPropogated = false,
         };
         SignalFactory.CreateSignal(transform.position, 5, packet);
         yield return new WaitForSeconds(3);
@@ -137,24 +140,16 @@ public class BeaconController : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(0, 10));
         while (true)
         {
-            Debug.Log("Beacon " + beaconID.ToString() + " sending signal");
             Packet packet = new Packet
             {
                 beaconID = beaconID,
-                //     info = new SensorInformation
-                //     {
-                //         time = currTime,
-                //         temp = Random.Range(70, 80),
-                //         humidity = Random.Range(0, 100),
-                //         windDirection = new Vector2(Random.Range(0, 1.0f), Random.Range(0, 1.0f)),
-                //         windSpeed = Random.Range(0, 100),
-                //     },
-                //     signalType = SignalType.DIRECT_SIGNAL,
-                //     isPropogated = false,
-                info = GridController.instance.GetSensorInfo(transform.position),
                 signalType = (SignalType)Random.Range(1, 3),
             };
-            beaconUI.UpdateInformation((SensorInformation)packet.info);
+            if (GridController.instance != null)
+            {
+                packet.info = GridController.instance.GetSensorInfo(transform.position);
+                beaconUI.UpdateInformation((SensorInformation)packet.info);
+            }
             beaconConnections.SendDirectSignal(this, packet);
             yield return new WaitForSeconds(Random.Range(2, 10));
         }
@@ -191,7 +186,6 @@ public class BeaconController : MonoBehaviour
     {
         beaconConnections.RemoveParentConnection();
     }
-
     public bool hasParent()
     {
         return beaconConnections.hasParent();

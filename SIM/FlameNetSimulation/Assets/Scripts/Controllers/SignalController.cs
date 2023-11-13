@@ -8,7 +8,6 @@ public struct Packet
     public int beaconID;
     public object info;
     public SignalType signalType;
-    public bool isPropogated;
 }
 public class SignalController : MonoBehaviour
 {

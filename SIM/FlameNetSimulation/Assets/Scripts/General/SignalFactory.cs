@@ -18,7 +18,6 @@ public class SignalFactory : MonoBehaviour
         Color color = signal.GetColor();
         color.b += 0.15f;
         Packet packet = signal.packet;
-        packet.isPropogated = true;
         signalPropogated.SetValues(packet, maxDistance, color);
         return signal;
     }
