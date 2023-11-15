@@ -85,15 +85,14 @@ public class BeaconController : MonoBehaviour
 {
     protected int beaconID;
     protected List<SensorInformation> data;
-    protected Date currTime;
-    private bool searching;
+    protected bool searching;
     [SerializeField] protected bool sendSignal;
     [SerializeField] protected BeaconViewerController beaconUI;
     [SerializeField] protected BeaconConnectionsController beaconConnections;
     private void Start()
     {
-        SetupBeacon();
-        StartCoroutine(SendSignal());
+        SetupBeacon(Random.Range(0, 1000));
+        StartCoroutine(SendSignalCycle());
     }
     private void Update()
     {
@@ -102,17 +101,15 @@ public class BeaconController : MonoBehaviour
             StartCoroutine(Searching());
         }
     }
-    protected void SetupBeacon()
+    protected void SetupBeacon(int beaconID)
     {
-        beaconID = Random.Range(0, 1000);
+        this.beaconID = beaconID;
         sendSignal = false;
         data = new List<SensorInformation>
         {
             new SensorInformation { }
         };
         beaconUI.SetupID(beaconID);
-        currTime = new Date();
-        StartCoroutine(TimePassing());
     }
     private IEnumerator Searching()
     {
@@ -127,32 +124,42 @@ public class BeaconController : MonoBehaviour
         yield return new WaitForSeconds(3);
         searching = false;
     }
-    private IEnumerator TimePassing()
-    {
-        while (true)
-        {
-            currTime.Increment();
-            yield return new WaitForSeconds(1);
-        }
-    }
-    private IEnumerator SendSignal()
+    private IEnumerator SendSignalCycle()
     {
         yield return new WaitForSeconds(Random.Range(0, 10));
         while (true)
         {
-            Packet packet = new Packet
-            {
-                beaconID = beaconID,
-                signalType = (SignalType)Random.Range(1, 3),
-            };
-            if (GridController.instance != null)
-            {
-                packet.info = GridController.instance.GetSensorInfo(transform.position);
-                beaconUI.UpdateInformation((SensorInformation)packet.info);
-            }
-            beaconConnections.SendDirectSignal(this, packet);
+            SendSignal();
             yield return new WaitForSeconds(Random.Range(2, 10));
         }
+    }
+    public void SendSignal()
+    {
+        Packet packet = new Packet
+        {
+            beaconID = beaconID,
+            signalType = (SignalType)Random.Range(1, 3),
+        };
+        if (GridController.instance != null)
+        {
+            packet.info = GridController.instance.GetSensorInfo(transform.position);
+            beaconUI.UpdateInformation((SensorInformation)packet.info);
+        }
+        beaconConnections.SendDirectSignal(this, packet);
+    }
+    public void SendSignal(SensorInformation sensorInfo)
+    {
+        Packet packet = new Packet
+        {
+            beaconID = beaconID,
+            signalType = SignalType.DIRECT,
+        };
+        if (GridController.instance != null)
+        {
+            packet.info = sensorInfo;
+            beaconUI.UpdateInformation((SensorInformation)packet.info);
+        }
+        beaconConnections.SendDirectSignal(this, packet);
     }
     public virtual void ReceiveSignal(Packet packet)
     {
