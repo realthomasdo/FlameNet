@@ -27,15 +27,30 @@ const nodeSchema = new mongoose.Schema({
   humidity: {
     type: Number,
   },
+  pressure: {
+    type: Number,
+  },
   co2Level: {
     type: Number,
   },
-  ppm: {
+  ppm1: {
+    type: Number,
+  },
+  ppm2_5: {
+    type: Number,
+  },
+  ppm10: {
     type: Number,
   },
   fireDetected: {
     type: Boolean,
     default: false,
+  },
+  windVelocity: {
+    type: Number,
+  },
+  windDirection: {
+    type: Number,
   },
 }, { collection: 'nodes' });
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 
-import masterIcon from './house-solid.png'; 
-import beaconIcon from './radio-solid.png'; 
+import masterIcon from './house-solid.png';
+import beaconIcon from './radio-solid.png';
 import fireIcon from './fire.gif';
 
 function NodeMarker({
@@ -15,6 +15,12 @@ function NodeMarker({
   ppm,
   isMasterNode,
   fireDetected,
+  pressure,
+  ppm1,
+  ppm2_5,
+  ppm10,
+  windVelocity,
+  windDirection,
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -69,6 +75,12 @@ function NodeMarker({
             {timestamp && <p>Timestamp: {timestamp}</p>}
             {co2Level && <p>CO2 Level: {co2Level} ppm</p>}
             {ppm && <p>PPM: {ppm}</p>}
+            {pressure && <p>Pressure: {pressure}</p>}
+            {ppm1 && <p>PPM1: {ppm1}</p>}
+            {ppm2_5 && <p>PPM2.5: {ppm2_5}</p>}
+            {ppm10 && <p>PPM10: {ppm10}</p>}
+            {windVelocity && <p>Wind Velocity: {windVelocity}</p>}
+            {windDirection && <p>Wind Direction: {windDirection}</p>}
             <p>Master Node: {isMasterNode ? 'true' : 'false'}</p>
             <p>Fire Detected: {fireDetected ? 'true' : 'false'}</p>
           </div>

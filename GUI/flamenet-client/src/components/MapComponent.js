@@ -84,6 +84,12 @@ const MapComponent = () => {
           ppm={node.ppm}
           isMasterNode={node.isMasterNode}
           fireDetected={node.fireDetected}
+          pressure={node.pressure}
+          ppm1={node.ppm1}
+          ppm2_5={node.ppm2_5}
+          ppm10={node.ppm10}
+          windVelocity={node.windVelocity}
+          windDirection={node.windDirection}
         />
       ))}
     </GoogleMap>
