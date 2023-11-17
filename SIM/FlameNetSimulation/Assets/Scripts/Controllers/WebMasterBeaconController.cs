@@ -1,105 +1,41 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Networking;
-public enum RequestType { NodeLogs, Nodes }
-public struct NodeLog
-{
-    public string _id;
-    public string nodeId;
-    public string timestamp;
-    public string commitTimestamp;
-    public float latitude;
-    public float longitude;
-    public float temperature;
-    public float humidity;
-    public float co2Level;
-    public float ppm;
-    public bool fireDetected;
-    public bool isMasterNode;
-    public int __v;
 
-}
-public class WebMasterBeaconController : WebBeaconController
+public class WebMasterBeaconController : MasterBeaconController
 {
-    [SerializeField] private ChartsController charts;
     [SerializeField] private GameObject webBeaconPrefab;
-    [SerializeField] private float maxDistance;
     private float positionScale;
     private List<WebBeaconController> webBeacons;
     private NodeLog masterNodeLog;
+    private Coroutine webConnection;
     // Start is called before the first frame update
     void Start()
     {
         positionScale = 10000;
+        webBeacons = new List<WebBeaconController>();
         SetupBeacon(0);
-        // StartCoroutine(GetRequest("https://flamenet-server.onrender.com/api/getNodeLogs", RequestType.NodeLogs));
-        StartCoroutine(GetRequest("https://flamenet-server.onrender.com/api/getNodes", RequestType.Nodes));
+        beaconConnections.AddParentConnection(this);
+        WebRequests.instance.SendGetRequest(RequestType.Nodes, StartupResponse);
+        webConnection = WebRequests.instance.StaticConnection(RequestType.Nodes, GetResponse);
     }
-
     // Update is called once per frame
     void Update()
     {
 
     }
-    private IEnumerator GetRequest(string uri, RequestType requestType)
+    private void GetResponse(List<NodeLog> nodes)
     {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
-        {
-            // Request and wait for the desired page.
-            yield return webRequest.SendWebRequest();
-
-            string[] pages = uri.Split('/');
-            int page = pages.Length - 1;
-
-            switch (webRequest.result)
-            {
-                case UnityWebRequest.Result.ConnectionError:
-                case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError(pages[page] + ": Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.Success:
-                    Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
-                    break;
-            }
-            switch (requestType)
-            {
-                case RequestType.Nodes:
-                    List<NodeLog> nodes = ConvertNodeLogs(webRequest.downloadHandler.text);
-                    masterNodeLog = nodes.Find(log => log.isMasterNode);
-                    nodes.Remove(masterNodeLog);
-                    SpawnSensorNodes(nodes);
-                    break;
-                case RequestType.NodeLogs:
-                    List<NodeLog> nodeLogs = ConvertNodeLogs(webRequest.downloadHandler.text);
-                    break;
-            }
-        }
+        masterNodeLog = nodes.Find(log => log.isMasterNode);
+        nodes.Remove(masterNodeLog);
+        CheckForSignals(nodes);
     }
-    private List<NodeLog> ConvertNodeLogs(string json)
+    private void StartupResponse(List<NodeLog> nodes)
     {
-        string Json = json.Substring(1, json.Length - 2);
-        Debug.Log(Json);
-        string[] nodeLogObjects = Json.Split("},");
-        List<NodeLog> nodeLogs = new List<NodeLog>();
-        for (int i = 0; i < nodeLogObjects.Length; i++)
-        {
-            if (nodeLogObjects[i][nodeLogObjects[i].Length - 1] != '}')
-            {
-                nodeLogObjects[i] = nodeLogObjects[i] + "}";
-            }
-            Debug.Log(nodeLogObjects[i]);
-
-            nodeLogs.Add(JsonUtility.FromJson<NodeLog>(nodeLogObjects[i]));
-            Debug.Log(nodeLogs[i]);
-            Debug.Log(nodeLogs[i].temperature);
-            Debug.Log(nodeLogs[i].nodeId);
-        }
-        return nodeLogs;
+        masterNodeLog = nodes.Find(log => log.isMasterNode);
+        nodes.Remove(masterNodeLog);
+        SpawnSensorNodes(nodes);
     }
     private void SpawnSensorNodes(List<NodeLog> nodes)
     {
@@ -107,12 +43,20 @@ public class WebMasterBeaconController : WebBeaconController
         {
             Vector3 position = GetNodePosition(node.latitude, node.longitude);
             WebBeaconController webBeacon = Instantiate(webBeaconPrefab, position, Quaternion.identity).GetComponent<WebBeaconController>();
-            Debug.Log(int.Parse(node.nodeId.Remove(0, 4)));
-            webBeacon.StartupBeacon(int.Parse(node.nodeId.Remove(0, 4)));
+            Debug.Log("Unparsed: " + node.nodeId.Remove(0, 4));
+            Debug.Log("Parsed: " + int.Parse(node.nodeId.Remove(0, 4)));
+            webBeacon.StartupBeacon(node.getNodeID(), node.GetDate());
             webBeacons.Add(webBeacon);
         });
     }
-
+    private void CheckForSignals(List<NodeLog> nodes)
+    {
+        nodes.ForEach(node =>
+        {
+            WebBeaconController beacon = webBeacons.Find(beacon => beacon.beaconID == node.getNodeID());
+            beacon.SendSignal(node.GetSensorInformation());
+        });
+    }
     private Vector3 GetNodePosition(float latitude, float longitude)
     {
         return new Vector3(latitude - masterNodeLog.latitude, 0, longitude - masterNodeLog.longitude) * positionScale;

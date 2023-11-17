@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class MasterBeaconController : BeaconController
 {
-    [SerializeField] private ChartsController charts;
+    [SerializeField] protected ChartsController charts;
     void Start()
     {
         SetupBeacon(0);

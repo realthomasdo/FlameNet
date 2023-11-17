@@ -2,88 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Date
-{
-    public int day;
-    public int month;
-    public int hour; // 24 hour time 1200 is noon etc
-    public void Increment()
-    {
-        hour++;
-        if (hour >= 2400)
-        {
-            hour = 0000;
-            day++;
-            if (day > 30)
-            {
-                month++;
-                if (month > 12)
-                {
-                    month = 0;
-                }
-            }
-        }
-    }
-    public int GetFullTime()
-    {
-        return month * 1000000 + day * 10000 + hour;
-    }
-    public static bool operator <(Date x, Date y)
-    {
-        if (x.month < y.month)
-        {
-            return true;
-        }
-        else if (x.month == y.month)
-        {
-            if (x.day < y.day)
-            {
-                return true;
-            }
-            else if (x.day == y.day)
-            {
-                if (x.hour < y.hour)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    public static bool operator >(Date x, Date y)
-    {
-        if (x.month > y.month)
-        {
-            return true;
-        }
-        else if (x.month == y.month)
-        {
-            if (x.day > y.day)
-            {
-                return true;
-            }
-            else if (x.day == y.day)
-            {
-                if (x.hour > y.hour)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-}
-public struct SensorInformation
-{
-    public Date time;
-    public float temp;
-    public float humidity;
-    public Vector2 windDirection;
-    public float windSpeed;
-}
 public class BeaconController : MonoBehaviour
 {
-    protected int beaconID;
+    public int beaconID;
     protected List<SensorInformation> data;
     protected bool searching;
     [SerializeField] protected bool sendSignal;
@@ -111,7 +32,7 @@ public class BeaconController : MonoBehaviour
         };
         beaconUI.SetupID(beaconID);
     }
-    private IEnumerator Searching()
+    protected IEnumerator Searching()
     {
         searching = true;
         Packet packet = new Packet
@@ -120,7 +41,7 @@ public class BeaconController : MonoBehaviour
             info = this,
             signalType = SignalType.MESH_CONNECTION,
         };
-        SignalFactory.CreateSignal(transform.position, 5, packet);
+        SignalFactory.CreateSignal(transform.position, packet);
         yield return new WaitForSeconds(3);
         searching = false;
     }
@@ -133,7 +54,7 @@ public class BeaconController : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(2, 10));
         }
     }
-    public void SendSignal()
+    public virtual void SendSignal()
     {
         Packet packet = new Packet
         {
@@ -147,7 +68,7 @@ public class BeaconController : MonoBehaviour
         }
         beaconConnections.SendDirectSignal(this, packet);
     }
-    public void SendSignal(SensorInformation sensorInfo)
+    public virtual void SendSignal(SensorInformation sensorInfo)
     {
         Packet packet = new Packet
         {

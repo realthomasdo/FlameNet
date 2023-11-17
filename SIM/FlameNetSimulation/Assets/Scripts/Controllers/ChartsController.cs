@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,16 +36,20 @@ public class ChartsController : MonoBehaviour
             switch (dataType)
             {
                 case DataType.TEMPERATURE:
-                    charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.temp);
+                    charts[i].AddData(serieName, GetTime(sensorData.time), sensorData.temp);
                     break;
                 case DataType.HUMIDITY:
-                    charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.humidity);
+                    charts[i].AddData(serieName, GetTime(sensorData.time), sensorData.humidity);
                     break;
                 case DataType.WIND_SPEED:
-                    charts[i].AddData(serieName, sensorData.time.GetFullTime(), sensorData.windSpeed);
+                    charts[i].AddData(serieName, GetTime(sensorData.time), sensorData.windSpeed);
                     break;
             }
         }
+    }
+    private int GetTime(DateTime date)
+    {
+        return date.Minute * 100 + date.Second;
     }
     public void AddBeaconToTrack(int beaconID)
     {

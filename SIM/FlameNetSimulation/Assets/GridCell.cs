@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,8 @@ public class GridCell : MonoBehaviour
     }
     public SensorInformation GetSensorInformation()
     {
+        sensorInfo.temp = UnityEngine.Random.Range(70, 80);
+        sensorInfo.time = DateTime.Now;
         return sensorInfo;
     }
     private void Start()

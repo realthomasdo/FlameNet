@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class SignalFactory : MonoBehaviour
 {
-    public static SignalController CreateSignal(Vector3 position, float maxDistance, Packet packet)
+    private static float maxDistance = 20;
+    public static SignalController CreateSignal(Vector3 position, Packet packet)
     {
         GameObject signalObject = Instantiate(GameAssets.i.SignalPrefab, position, Quaternion.identity);
         SignalController signal = signalObject.GetComponent<SignalController>();
         signal.SetValues(packet, maxDistance);
         return signal;
     }
-    public static SignalController CreateSignal(Vector3 position, float maxDistance, SignalController signal)
+    public static SignalController CreateSignal(Vector3 position, SignalController signal)
     {
         GameObject signalObject = Instantiate(GameAssets.i.SignalPrefab, position, Quaternion.identity);
         SignalController signalPropogated = signalObject.GetComponent<SignalController>();
