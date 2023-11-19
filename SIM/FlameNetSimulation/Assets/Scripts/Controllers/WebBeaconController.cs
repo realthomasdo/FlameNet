@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.InputSystem;
 public class WebBeaconController : BeaconController
 {
     private DateTime lastSent;
+    [SerializeField] private bool resetTime;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +16,10 @@ public class WebBeaconController : BeaconController
         if (!searching && !beaconConnections.hasParent())
         {
             StartCoroutine(Searching());
+        }
+        if (resetTime)
+        {
+            lastSent = DateTime.MinValue;
         }
     }
     public override void SendSignal(SensorInformation sensorInfo)
