@@ -54,6 +54,7 @@ MonoBehaviour:
   sendSignal: 0
   beaconUI: {fileID: 6126181273394755260}
   beaconConnections: {fileID: 3483641331688359316}
+  myModel: {fileID: 6240661735903551869}
 --- !u!33 &8740043605535931671
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -224,7 +225,7 @@ PrefabInstance:
     - target: {fileID: 3208769425551258176, guid: 0f91da1d553e8534884d334c92d12b2f,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 3
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 3208769425551258176, guid: 0f91da1d553e8534884d334c92d12b2f,
         type: 3}

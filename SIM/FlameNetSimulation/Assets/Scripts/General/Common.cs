@@ -110,6 +110,12 @@ public struct SensorInformation
     public float humidity;
     public float windDirection;
     public float windSpeed;
+    public float co2Level;
+    public float pressure;
+    public float ppm1;
+    public float ppm2_5;
+    public float ppm10;
+    public bool fireDetected;
 }
 public class Common : MonoBehaviour
 {

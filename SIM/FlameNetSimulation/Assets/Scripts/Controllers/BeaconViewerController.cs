@@ -9,12 +9,12 @@ public class BeaconViewerController : MonoBehaviour
 {
     [SerializeField] private GameObject display;
     [SerializeField] private TextMeshProUGUI title;
-    [SerializeField] private TextMeshProUGUI temp, humidity, windDir, windSpeed, timing;
+    [SerializeField] private TextMeshProUGUI temp, humidity, windDir, windSpeed, co2;
     private static string TEMP_TEXT_DEFAULT = "Temperature: ";
     private static string HUMIDITY_TEXT_DEFAULT = "Humidity: ";
     private static string WINDDIR_TEXT_DEFAULT = "Wind Direction: ";
     private static string WINDSPEED_TEXT_DEFAULT = "Wind Speed: ";
-    private static string TIMING_TEXT_DEFAULT = "Timing: ";
+    private static string CO2_TEXT_DEFAULT = "CO2 Level: ";
     // Start is called before the first frame update
     void Start()
     {
@@ -29,21 +29,41 @@ public class BeaconViewerController : MonoBehaviour
     {
         title.text = "BeaconID: " + beaconID.ToString();
     }
-    public void SetupTiming(int time)
-    {
-        timing.text = TIMING_TEXT_DEFAULT + time.ToString();
-    }
     public bool ToggleDisplay()
     {
         display.SetActive(!display.activeSelf);
         return display.activeSelf;
     }
-    public void UpdateInformation(SensorInformation latestInformation)
+    public void UpdateSensors(List<DataType> sensorsMalfunctioning)
     {
-        temp.text = TEMP_TEXT_DEFAULT + latestInformation.temp.ToString();
-        humidity.text = HUMIDITY_TEXT_DEFAULT + latestInformation.humidity.ToString();
-        windDir.text = WINDDIR_TEXT_DEFAULT + latestInformation.windDirection.ToString();
-        windSpeed.text = WINDSPEED_TEXT_DEFAULT + latestInformation.windSpeed.ToString();
+        temp.text = TEMP_TEXT_DEFAULT + "WORKING";
+        co2.text = CO2_TEXT_DEFAULT + "WORKING";
+        humidity.text = HUMIDITY_TEXT_DEFAULT + "WORKING";
+        windDir.text = WINDDIR_TEXT_DEFAULT + "WORKING";
+        windSpeed.text = WINDSPEED_TEXT_DEFAULT + "WORKING";
+
+        sensorsMalfunctioning.ForEach(sensor =>
+        {
+            switch (sensor)
+            {
+                case DataType.TEMPERATURE:
+                    temp.text = TEMP_TEXT_DEFAULT + "MALFUNCTIONING";
+                    break;
+                case DataType.CO2LEVEL:
+                    co2.text = CO2_TEXT_DEFAULT + "MALFUNCTIONING";
+                    break;
+                case DataType.HUMIDITY:
+                    humidity.text = HUMIDITY_TEXT_DEFAULT + "MALFUNCTIONING";
+                    break;
+                case DataType.WIND_DIRECTION:
+                    windDir.text = WINDDIR_TEXT_DEFAULT + "MALFUNCTIONING";
+                    break;
+                case DataType.WIND_SPEED:
+                    windSpeed.text = WINDSPEED_TEXT_DEFAULT + "MALFUNCTIONING";
+                    break;
+            }
+        });
+
     }
 
 }

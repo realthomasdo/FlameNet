@@ -22,6 +22,8 @@ public class GridCell : MonoBehaviour
     public SensorInformation GetSensorInformation()
     {
         sensorInfo.temp = UnityEngine.Random.Range(70, 80);
+        sensorInfo.windSpeed = UnityEngine.Random.Range(70, 80);
+        sensorInfo.humidity = UnityEngine.Random.Range(70, 80);
         sensorInfo.time = DateTime.Now;
         return sensorInfo;
     }

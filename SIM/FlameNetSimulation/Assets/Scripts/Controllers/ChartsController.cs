@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using XCharts.Runtime;
 
-public enum DataType { TEMPERATURE, HUMIDITY, WIND_DIRECTION, WIND_SPEED };
+public enum DataType { TEMPERATURE, HUMIDITY, WIND_DIRECTION, WIND_SPEED, CO2LEVEL };
 public class ChartsController : MonoBehaviour
 {
     public static ChartsController i;

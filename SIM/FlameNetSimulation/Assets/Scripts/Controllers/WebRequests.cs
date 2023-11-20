@@ -7,19 +7,40 @@ using UnityEngine.Networking;
 public enum RequestType { NodeLogs, Nodes }
 public struct NodeLog
 {
+    /*
+    "nodeId": 
+    "timestamp": 
+    "isMasterNode": 
+    "latitude": 
+    "longitude":
+    "temperature":
+    "pressure": 
+    "humidity": 
+    "co2Level":
+    "ppm1": 
+    "ppm2.5": 
+    "ppm10": 
+    "fireDetected": 
+    "windVelocity":
+    "windDirection":    
+    */
     public string _id;
     public string nodeId;
+    public bool isMasterNode;
     public string timestamp;
     public string commitTimestamp;
     public float latitude;
     public float longitude;
     public float temperature;
+    public float pressure;
     public float humidity;
     public float co2Level;
-    public float ppm;
+    public float ppm1;
+    public float ppm2_5;
+    public float ppm10;
     public bool fireDetected;
-    public bool isMasterNode;
-    public int __v;
+    public float windVelocity;
+    public float windDirection;
     public DateTime GetDate()
     {
         System.DateTime.TryParse(timestamp, out DateTime date);
