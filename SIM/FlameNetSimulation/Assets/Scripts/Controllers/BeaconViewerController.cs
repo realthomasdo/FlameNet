@@ -37,10 +37,15 @@ public class BeaconViewerController : MonoBehaviour
     public void UpdateSensors(List<DataType> sensorsMalfunctioning)
     {
         temp.text = TEMP_TEXT_DEFAULT + "WORKING";
+        temp.color = Color.green;
         co2.text = CO2_TEXT_DEFAULT + "WORKING";
+        co2.color = Color.green;
         humidity.text = HUMIDITY_TEXT_DEFAULT + "WORKING";
+        humidity.color = Color.green;
         windDir.text = WINDDIR_TEXT_DEFAULT + "WORKING";
+        windDir.color = Color.green;
         windSpeed.text = WINDSPEED_TEXT_DEFAULT + "WORKING";
+        windSpeed.color = Color.green;
 
         sensorsMalfunctioning.ForEach(sensor =>
         {
@@ -48,18 +53,23 @@ public class BeaconViewerController : MonoBehaviour
             {
                 case DataType.TEMPERATURE:
                     temp.text = TEMP_TEXT_DEFAULT + "MALFUNCTIONING";
+                    temp.color = Color.red;
                     break;
                 case DataType.CO2LEVEL:
                     co2.text = CO2_TEXT_DEFAULT + "MALFUNCTIONING";
+                    co2.color = Color.red;
                     break;
                 case DataType.HUMIDITY:
                     humidity.text = HUMIDITY_TEXT_DEFAULT + "MALFUNCTIONING";
+                    humidity.color = Color.red;
                     break;
                 case DataType.WIND_DIRECTION:
                     windDir.text = WINDDIR_TEXT_DEFAULT + "MALFUNCTIONING";
+                    windDir.color = Color.red;
                     break;
                 case DataType.WIND_SPEED:
                     windSpeed.text = WINDSPEED_TEXT_DEFAULT + "MALFUNCTIONING";
+                    windSpeed.color = Color.red;
                     break;
             }
         });
