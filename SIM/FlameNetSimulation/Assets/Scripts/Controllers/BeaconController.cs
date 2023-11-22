@@ -17,7 +17,7 @@ public class BeaconController : MonoBehaviour
     [SerializeField] protected Renderer myModel;
     private void Start()
     {
-        SetupBeacon(Random.Range(0, 1000));
+        SetupBeacon(Random.Range(0, 10000));
         StartCoroutine(SendSignalCycle());
         MalfunctionSensors();
     }
@@ -65,12 +65,12 @@ public class BeaconController : MonoBehaviour
         int amntEnums = Enum.GetValues(typeof(DataType)).Length;
         int numSensors = 0;
         float value = Random.value;
-        if (value < 0.98)
+        if (value > 0.97)
         {
             numSensors = Random.Range(3, amntEnums);
             myModel.material.color = Color.red;
         }
-        else if (value > 0.87)
+        else if (value > 0.90)
         {
             numSensors = Random.Range(1, 3);
             myModel.material.color = Color.yellow;
