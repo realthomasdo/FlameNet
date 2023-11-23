@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float mouseSensitivity;
     [SerializeField] private InputActionReference movement, rotation, leftClick;
-    [SerializeField] private GameObject camera;
+    [SerializeField] private GameObject Camera;
     void Start()
     {
         leftClick.action.performed += LeftClickAction;
@@ -30,7 +30,7 @@ public class CameraController : MonoBehaviour
     }
     private void LeftClickAction(InputAction.CallbackContext callBack)
     {
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Beacon"))
             {

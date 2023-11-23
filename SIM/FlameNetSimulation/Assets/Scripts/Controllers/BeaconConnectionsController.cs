@@ -7,7 +7,7 @@ public class BeaconConnectionsController : MonoBehaviour
     private BeaconController parent;
     private List<(LineRenderer line, BeaconController beacon)> connections;
     [SerializeField] private GameObject linePrefab;
-    private float maxDist = 10;
+    private float maxDist = 20;
     private void Start()
     {
         connections = new List<(LineRenderer, BeaconController)>();

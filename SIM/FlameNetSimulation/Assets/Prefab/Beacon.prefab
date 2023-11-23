@@ -50,9 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89fc499d886ea304886aeb035af72d4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  beaconID: 0
   sendSignal: 0
   beaconUI: {fileID: 6126181273394755260}
   beaconConnections: {fileID: 3483641331688359316}
+  myModel: {fileID: 6240661735903551869}
 --- !u!33 &8740043605535931671
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -130,7 +132,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &5854529270682016156
 GameObject:
@@ -223,7 +225,7 @@ PrefabInstance:
     - target: {fileID: 3208769425551258176, guid: 0f91da1d553e8534884d334c92d12b2f,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3208769425551258176, guid: 0f91da1d553e8534884d334c92d12b2f,
         type: 3}

@@ -1,27 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MasterBeaconController : BeaconController
 {
-    [SerializeField] private ChartsController charts;
+    [SerializeField] protected ChartsController charts;
     void Start()
     {
-        beaconID = 0;
+        SetupBeacon(0);
         beaconConnections.AddParentConnection(this);
-        sendSignal = false;
-        currTime = new Date();
-        StartCoroutine(TimePassing());
     }
-    private IEnumerator TimePassing()
-    {
-        while (true)
-        {
-            currTime.Increment();
-            yield return new WaitForSeconds(1);
-        }
-    }
-
     void Update()
     {
         if (sendSignal)
@@ -33,15 +20,23 @@ public class MasterBeaconController : BeaconController
     {
         switch (packet.signalType)
         {
-            case SignalType.DIRECT_SIGNAL:
-                SensorInformation sensorInfo = (SensorInformation)packet.info;
-                charts.AddData(packet.beaconID, sensorInfo, true);
+            case SignalType.DIRECT:
+                if (packet.info is SensorInformation)
+                {
+                    SensorInformation sensorInfo = (SensorInformation)packet.info;
+                    charts.AddData(packet.beaconID, sensorInfo, true);
+                }
+                break;
+            case SignalType.DISTRESS:
                 break;
             case SignalType.MESH_CONNECTION:
-                BeaconController beacon = (BeaconController)packet.info;
-                if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                if (packet.info is BeaconController)
                 {
-                    beacon.AddParentConnection(this);
+                    BeaconController beacon = (BeaconController)packet.info;
+                    if (!beacon.hasParent() && beaconConnections.AddConnection(beacon))
+                    {
+                        beacon.AddParentConnection(this);
+                    }
                 }
                 break;
         }

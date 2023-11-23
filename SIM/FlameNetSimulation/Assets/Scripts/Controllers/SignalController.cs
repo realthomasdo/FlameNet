@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum SignalType { MESH_CONNECTION, DIRECT_SIGNAL };
+public enum SignalType { MESH_CONNECTION, DIRECT, DISTRESS };
 public struct Packet
 {
     public int beaconID;
     public object info;
     public SignalType signalType;
-    public bool isPropogated;
 }
 public class SignalController : MonoBehaviour
 {
