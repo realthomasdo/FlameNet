@@ -92,6 +92,36 @@ app.get('/api/getNodeLogs', async (req, res) => {
   }
 });
 
+//sort getNodeLogs by node, 
+app.get('/api/getNodeLogsSorted', async (req, res) => {
+  try {
+    const data = await NodeLog.find().sort({ timestamp: -1 });
+
+    // Sorting is already done in the database query, so you can remove the sort operation here
+
+    
+    const sortedArr = [];
+
+    data.forEach((entry) => {
+      const { nodeId, timestamp, temperature, humidity, ppm, ppm2_5 } = entry;
+      let row = sortedArr.find((row) => row[0] === nodeId);
+
+      if (!row) {
+        row = [nodeId];
+        sortedArr.push(row);
+      }
+
+      row.push({ timestamp, temperature, humidity, ppm, ppm2_5 });
+    });
+
+    res.json(sortedArr); // Send the sorted data as the response
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error - Alerts' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
