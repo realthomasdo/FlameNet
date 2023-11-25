@@ -97,7 +97,6 @@ app.get('/api/getNodeLogsSorted', async (req, res) => {
   try {
     const data = await NodeLog.find().sort({ timestamp: -1 });
 
-    // Sorting is already done in the database query, so you can remove the sort operation here
 
     
     const sortedArr = [];
@@ -114,7 +113,7 @@ app.get('/api/getNodeLogsSorted', async (req, res) => {
       row.push({ timestamp, temperature, humidity, ppm, ppm2_5 });
     });
 
-    res.json(sortedArr); // Send the sorted data as the response
+    res.json(sortedArr); 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error - Alerts' });

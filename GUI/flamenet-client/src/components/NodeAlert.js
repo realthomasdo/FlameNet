@@ -92,9 +92,9 @@ const NodeAlert = () => {
         
                 // Update states after the loop
                 setHighHumidity((prevNodes) => new Set([...prevNodes, ...newHighHumiditySet]));
-setHighTemp((prevNodes) => new Set([...prevNodes, ...newHighTempSet]));
-setHighAvg((prevNodes) => new Set([...prevNodes, ...newHighAvgSet]));
-        
+                setHighTemp((prevNodes) => new Set([...prevNodes, ...newHighTempSet]));
+                setHighAvg((prevNodes) => new Set([...prevNodes, ...newHighAvgSet]));
+                        
             } catch (error) {
                 console.error('Error fetching nodes, getting sorted NodeLogs', error);
             }
