@@ -45,6 +45,7 @@ const NodeAlert = () => {
             setShowHumidAlr(true);
             setShowTempAlr(true);
             try {
+                //change later
                 const response = await fetch('http://localhost:3001/api/getNodeLogsSorted');
                 const data = await response.json();
         
@@ -90,7 +91,7 @@ const NodeAlert = () => {
                     }
                 });
         
-                // Update states after the loop
+                // Update states after 
                 setHighHumidity((prevNodes) => new Set([...prevNodes, ...newHighHumiditySet]));
                 setHighTemp((prevNodes) => new Set([...prevNodes, ...newHighTempSet]));
                 setHighAvg((prevNodes) => new Set([...prevNodes, ...newHighAvgSet]));
