@@ -11,6 +11,7 @@ public class GridController : MonoBehaviour
     [SerializeField] private int height;
     [SerializeField] private int width;
     [SerializeField] private Camera sceneCamera;
+    [SerializeField] private GameObject FirePrefab;
     private Vector3 lastPosition;
     private float GridSpaceSize = 2.5f;
 
@@ -63,29 +64,37 @@ public class GridController : MonoBehaviour
         }
         return new SensorInformation();
     }
-
-    public Vector3 GetSelectedMapPos()
+    public void SpawnFire(Vector3 mousePos)
     {
-        Vector3 mousePos = Input.mousePosition;
-        mousePos.z = sceneCamera.nearClipPlane;
-        Ray ray = sceneCamera.ScreenPointToRay(mousePos);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 100))
+        float delX = mousePos.x - gameGrid[0, 0].transform.position.x;
+        float delZ = mousePos.z - gameGrid[0, 0].transform.position.z;
+        int xSteps = (int)(Mathf.Abs(delX) / 2.5);
+        int zSteps = (int)(Mathf.Abs(delZ) / 2.5);
+        if (xSteps < 0 || xSteps >= height || zSteps < 0 || zSteps >= width)
         {
-            lastPosition = hit.point;
+            return;
         }
-        return lastPosition;
+        FireController fire = Instantiate(FirePrefab, gameGrid[xSteps, zSteps].transform.position, FirePrefab.transform.rotation).GetComponent<FireController>();
+        fire.SetCells(GetCellsAround(xSteps, zSteps));
     }
-
-    private void Update()
+    private List<(GridCell, float)> GetCellsAround(int xStart, int yStart)
     {
-        if (Input.GetMouseButtonDown(0)) {
-            Vector3 mousePos = GetSelectedMapPos();
-            float delX = mousePos.x - gameGrid[0, 0].transform.position.x;
-            float delZ = mousePos.z - gameGrid[0, 0].transform.position.z;
-            int xSteps = (int) (Mathf.Abs(delX) / 2.5);
-            int zSteps = (int) (Mathf.Abs(delZ) / 2.5);
-            gameGrid[xSteps, zSteps].sensorInfo.temp = 100f;
+        List<(GridCell, float)> grids = new List<(GridCell, float)>
+        {
+            (gameGrid[xStart, yStart], 1)
+        };
+        float maxDist = 2;
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                float dist = Vector2.Distance(new Vector2(x, y), new Vector2(xStart, yStart));
+                if (dist <= maxDist)
+                {
+                    grids.Add((gameGrid[x, y], dist));
+                }
+            }
         }
+        return grids;
     }
 }

@@ -171,4 +171,4 @@ MonoBehaviour:
     type: 3}
   leftClick: {fileID: 3740477986529893744, guid: d08ccc322117cf64a877c35ca1d85cbf,
     type: 3}
-  Camera: {fileID: 7894145960402539386}
+  Camera: {fileID: 7894145960402539380}

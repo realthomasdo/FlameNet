@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
 
 public class BeaconController : MonoBehaviour
@@ -115,6 +116,14 @@ public class BeaconController : MonoBehaviour
         });
         return sensorZeroed;
     }
+    private SensorInformation CheckForFire(SensorInformation sensorInformation)
+    {
+        if (sensorInformation.temp > 200)
+        {
+            sensorInformation.fireDetected = true;
+        }
+        return sensorInformation;
+    }
     public virtual void SendSignal()
     {
         Packet packet = new Packet
@@ -125,6 +134,7 @@ public class BeaconController : MonoBehaviour
         {
             SensorInformation sensorInfo = GridController.instance.GetSensorInfo(transform.position);
             sensorInfo = ZeroSensorInfo(sensorInfo);
+            sensorInfo = CheckForFire(sensorInfo);
             packet.info = sensorInfo;
             packet.signalType = sensorInfo.fireDetected ? SignalType.DISTRESS : SignalType.DIRECT;
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GridCell : MonoBehaviour
 {
@@ -20,30 +21,34 @@ public class GridCell : MonoBehaviour
     }
     public SensorInformation GetSensorInformation()
     {
-        sensorInfo.temp = UnityEngine.Random.Range(70, 100);
-        sensorInfo.windSpeed = UnityEngine.Random.Range(70, 80);
-        sensorInfo.humidity = UnityEngine.Random.Range(0, 100);
         sensorInfo.time = DateTime.Now;
         return sensorInfo;
     }
     private void Start()
     {
-        sensorInfo = new SensorInformation();
+        sensorInfo = new SensorInformation
+        {
+            temp = UnityEngine.Random.Range(65.0f, 75),
+            windSpeed = UnityEngine.Random.Range(5.0f, 8),
+            humidity = UnityEngine.Random.Range(60.0f, 70)
+        };
         GetSensorInformation();
     }
     private void Update()
     {
-        if (Input.GetKeyDown("l")) {
+        if (Input.GetKeyDown("l"))
+        {
             layer = (layer + 1) % 3;
         }
         SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
-        switch (layer) {
+        switch (layer)
+        {
             case 0: // Clear
                 renderer.enabled = false;
                 break;
             case 1: // Temperature Layer
                 renderer.enabled = true;
-                float bindTemp = sensorInfo.temp / 100;
+                float bindTemp = sensorInfo.temp / 1000;
                 float R = 1f * bindTemp;
                 float G = (-1f * bindTemp) + 1f;
                 renderer.color = new Color(R, G, 0f, 0.65f);

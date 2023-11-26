@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float mouseSensitivity;
     [SerializeField] private InputActionReference movement, rotation, leftClick;
-    [SerializeField] private GameObject Camera;
+    [SerializeField] private Camera Camera;
     void Start()
     {
         leftClick.action.performed += LeftClickAction;
@@ -30,11 +30,18 @@ public class CameraController : MonoBehaviour
     }
     private void LeftClickAction(InputAction.CallbackContext callBack)
     {
-        if (Physics.Raycast(Camera.transform.position, Camera.transform.forward, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = Camera.nearClipPlane;
+        Ray ray = Camera.ScreenPointToRay(mousePos);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
         {
             if (hit.collider != null && hit.collider.gameObject.CompareTag("Beacon"))
             {
                 hit.collider.GetComponent<BeaconController>().ToggleDisplay();
+            }
+            else
+            {
+                GridController.instance.SpawnFire(hit.point);
             }
         }
     }
