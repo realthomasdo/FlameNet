@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4728850983739652835}
   - component: {fileID: 140564206109972455}
+  - component: {fileID: 8245451880029287148}
   m_Layer: 0
   m_Name: GridCell
   m_TagString: Untagged
@@ -45,7 +46,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4dbca2dacf3b347aab802ef844b743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  temperature: 100
+--- !u!156049354 &8245451880029287148
+Grid:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4728850983739652833}
+  m_Enabled: 1
+  m_CellSize: {x: 2.5, y: 2.5, z: 2.5}
+  m_CellGap: {x: 0, y: 0, z: 0}
+  m_CellLayout: 0
+  m_CellSwizzle: 0
 --- !u!1 &5824962515099256723
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,7 +83,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5824962515099256723}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.25, y: 0, z: -1.25}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children: []

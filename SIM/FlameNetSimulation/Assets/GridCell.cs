@@ -7,8 +7,7 @@ public class GridCell : MonoBehaviour
 {
     private int posX;
     private int posY;
-
-    public float temperature = 100f;
+    private int layer = 0;
     public SensorInformation sensorInfo;
     public void SetPosition(int x, int y)
     {
@@ -21,20 +20,40 @@ public class GridCell : MonoBehaviour
     }
     public SensorInformation GetSensorInformation()
     {
-        sensorInfo.temp = UnityEngine.Random.Range(70, 80);
+        sensorInfo.temp = UnityEngine.Random.Range(70, 100);
         sensorInfo.windSpeed = UnityEngine.Random.Range(70, 80);
-        sensorInfo.humidity = UnityEngine.Random.Range(70, 80);
+        sensorInfo.humidity = UnityEngine.Random.Range(0, 100);
         sensorInfo.time = DateTime.Now;
         return sensorInfo;
     }
     private void Start()
     {
         sensorInfo = new SensorInformation();
+        GetSensorInformation();
     }
     private void Update()
     {
-        float bindTemp = (temperature / 100);
+        if (Input.GetKeyDown("l")) {
+            layer = (layer + 1) % 3;
+        }
         SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
-        renderer.color = new Color(1f, 1f - bindTemp, 1f - bindTemp, 1f);
+        switch (layer) {
+            case 0: // Clear
+                renderer.enabled = false;
+                break;
+            case 1: // Temperature Layer
+                renderer.enabled = true;
+                float bindTemp = sensorInfo.temp / 100;
+                float R = 1f * bindTemp;
+                float G = (-1f * bindTemp) + 1f;
+                renderer.color = new Color(R, G, 0f, 0.65f);
+                break;
+            case 2: // Humidity Layer
+                renderer.enabled = true;
+                float bindHumidity = sensorInfo.humidity / 100;
+                float B = 1f * bindHumidity;
+                renderer.color = new Color(0f, 0f, B, 0.65f);
+                break;
+        }
     }
 }

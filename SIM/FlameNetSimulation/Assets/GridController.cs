@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,11 +10,12 @@ public class GridController : MonoBehaviour
     public static GridController instance;
     [SerializeField] private int height;
     [SerializeField] private int width;
+    [SerializeField] private Camera sceneCamera;
+    private Vector3 lastPosition;
     private float GridSpaceSize = 2.5f;
 
     [SerializeField] private GameObject gridCellPrefab;
     private GridCell[,] gameGrid;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -59,5 +62,30 @@ public class GridController : MonoBehaviour
             }
         }
         return new SensorInformation();
+    }
+
+    public Vector3 GetSelectedMapPos()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = sceneCamera.nearClipPlane;
+        Ray ray = sceneCamera.ScreenPointToRay(mousePos);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            lastPosition = hit.point;
+        }
+        return lastPosition;
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0)) {
+            Vector3 mousePos = GetSelectedMapPos();
+            float delX = mousePos.x - gameGrid[0, 0].transform.position.x;
+            float delZ = mousePos.z - gameGrid[0, 0].transform.position.z;
+            int xSteps = (int) (Mathf.Abs(delX) / 2.5);
+            int zSteps = (int) (Mathf.Abs(delZ) / 2.5);
+            gameGrid[xSteps, zSteps].sensorInfo.temp = 100f;
+        }
     }
 }
