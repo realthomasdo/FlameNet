@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Grid from '@mui/material/Grid';
 import MapComponent from '../components/MapComponent';
+import NodeAlert from '../components/NodeAlert';
 
 function MainPage() {
   return (
@@ -13,6 +14,7 @@ function MainPage() {
         </Grid>
         <Grid item xs={10}>
           <MapComponent />
+          <NodeAlert />
         </Grid>
       </Grid>
     </div>

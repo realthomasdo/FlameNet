@@ -19,7 +19,9 @@ const NodeAlert = () => {
         const fetchData = async () => {
             setShowFireAlr(true);
             try {
+                //const response = await fetch('http://localhost:3001/api/getNodes');
                 const response = await fetch('https://flamenet-server.onrender.com/api/getNodes');
+
                 const data = await response.json();
 
                 const onFire = data.filter((node) => node.fireDetected === true).map((node) => node.nodeId);
@@ -46,6 +48,7 @@ const NodeAlert = () => {
             setShowTempAlr(true);
             try {
                 //change later
+                //const response = await fetch('http://localhost:3001/api/getNodeLogsSorted');
                 const response = await fetch('https://flamenet-server.onrender.com/api/getNodeLogsSorted');
                 const data = await response.json();
         
@@ -130,7 +133,7 @@ const NodeAlert = () => {
                     <AlertTitle>Fire!</AlertTitle>
                     <div>Alert: Fire detected in the following nodes: </div>
                     <ul>
-                        {[...fireDetected].map((node) => (
+                        {[...fireDetected].sort().map((node) => (
                             <li key={node}>{node}</li>
                         ))}
                     </ul>
@@ -155,7 +158,7 @@ const NodeAlert = () => {
                     <AlertTitle>High Temperature!</AlertTitle>
                     <div>Warning: Rising temperatures above 57 degrees detected in the following nodes:</div>
                     <ul>
-                        {[...highTemp].map((node) => (
+                        {[...highTemp].sort().map((node) => (
                             <li key={node}>{node}</li>
                         ))}
                     </ul>
@@ -179,7 +182,7 @@ const NodeAlert = () => {
                 >
                     <div>Humidity dropping in the following nodes:</div>
                     <ul>
-                        {[...highHumidity].map((node) => (
+                        {[...highHumidity].sort().map((node) => (
                             <li key={node}>{node}</li>
                         ))}
                     </ul>
@@ -204,7 +207,7 @@ const NodeAlert = () => {
                     <AlertTitle>High average temperature</AlertTitle>
                     <div>Environment around the following nodes experiencing high average temperatures:</div>
                     <ul>
-                        {[...highAvg].map((node) => (
+                        {[...highAvg].sort().map((node) => (
                             <li key={node}>{node}</li>
                         ))}
                     </ul>
