@@ -103,15 +103,17 @@ const DataTable = () => {
   }, []);
 
   return (
-    <MaterialReactTable
-      columns={columns}
-      data={data}
-      initialSortBy={[
-        { accessorKey: 'commitTimestamp', descending: true },
-        { accessorKey: 'timestamp', descending: true },
-        { accessorKey: 'nodeID', descending: false },
-      ]}
-    />
+    <div style={{ height: '80vh', overflow: 'auto' }}>
+      <MaterialReactTable
+        columns={columns}
+        data={data}
+        initialSortBy={[
+          { accessorKey: 'commitTimestamp', descending: true },
+          { accessorKey: 'timestamp', descending: true },
+          { accessorKey: 'nodeID', descending: false },
+        ]}
+      />
+      </div>
   );
 };
 

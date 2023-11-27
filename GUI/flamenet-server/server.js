@@ -92,6 +92,30 @@ app.get('/api/getNodeLogs', async (req, res) => {
   }
 });
 
+//sort getNodeLogs by node, 
+app.get('/api/getNodeLogsSorted', async (req, res) => {
+  try {
+     const sortedArr = [];
+
+    data.forEach((entry) => {
+      const { nodeId, timestamp, temperature, humidity, ppm, ppm2_5 } = entry;
+      let row = sortedArr.find((row) => row[0] === nodeId);
+
+      if (!row) {
+        row = [nodeId];
+        sortedArr.push(row);
+      }
+      row.push({ timestamp, temperature, humidity, ppm, ppm2_5 });
+    });
+
+    res.json(sortedArr); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error - Alerts' });
+  }
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
