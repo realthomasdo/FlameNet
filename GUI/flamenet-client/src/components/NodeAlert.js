@@ -46,7 +46,7 @@ const NodeAlert = () => {
             setShowTempAlr(true);
             try {
                 //change later
-                const response = await fetch('http://localhost:3001/api/getNodeLogsSorted');
+                const response = await fetch('https://flamenet-server.onrender.com/api/getNodeLogsSorted');
                 const data = await response.json();
         
                 const newHighHumiditySet = new Set();
