@@ -70,6 +70,46 @@ app.post('/api/createOrUpdateNodes', async (req, res) => {
   }
 });
 
+//delete specified nodes from Nodes
+app.delete('/api/deleteNodes', async (req, res) => {
+  try {
+    const { nodeIds } = req.body;
+
+    // Validate that nodeIds is an array
+    if (!Array.isArray(nodeIds)) {
+      return res.status(400).json({ error: 'Invalid request body. Expected an array of nodeIds.' });
+    }
+
+    // Delete documents with the specified nodeIds
+    const result = await Node.deleteMany({ nodeId: { $in: nodeIds } });
+
+    res.json({ message: `Deleted ${result.deletedCount} node logs successfully.` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//delete specified nodes from NodeLogs
+app.delete('/api/deleteNodeLogs', async (req, res) => {
+  try {
+    const { nodeIds } = req.body;
+
+    // Validate that nodeIds is an array
+    if (!Array.isArray(nodeIds)) {
+      return res.status(400).json({ error: 'Invalid request body. Expected an array of nodeIds.' });
+    }
+
+    // Delete documents with the specified nodeIds
+    const result = await NodeLog.deleteMany({ nodeId: { $in: nodeIds } });
+
+    res.json({ message: `Deleted ${result.deletedCount} node logs successfully.` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Get all current nodes
 app.get('/api/getNodes', async (req, res) => {
   try {
