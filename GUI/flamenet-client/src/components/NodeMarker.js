@@ -72,8 +72,7 @@ function NodeMarker({
             {temperature && <p>Temperature: {temperature} °C</p>}
             {humidity && <p>Humidity: {humidity}%</p>}
             {timestamp && <p>Timestamp: {timestamp}</p>}
-            {co2Level && <p>CO2 Level: {co2Level} ppm</p>}
-            {ppm && <p>PPM: {ppm}</p>}
+            {co2Level && <p>CO2 Level: {co2Level} </p>}
             {pressure && <p>Pressure: {pressure}</p>}
             {ppm2_5 && <p>PPM2.5: {ppm2_5}</p>}
             {ppm10 && <p>PPM10: {ppm10}</p>}
