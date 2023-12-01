@@ -37,9 +37,6 @@ const nodeLogSchema = new mongoose.Schema({
   co2Level: {
     type: Number,
   },
-  ppm1: {
-    type: Number,
-  },
   ppm2_5: {
     type: Number,
   },
