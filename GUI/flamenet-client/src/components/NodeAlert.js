@@ -36,7 +36,7 @@ const NodeAlert = () => {
         fetchData();
         const pollInterval = setInterval(() => {
             fetchData();
-        }, 7000);
+        }, 2000);
 
         return () => clearInterval(pollInterval);
     }, []);
@@ -108,7 +108,7 @@ const NodeAlert = () => {
         alertCalc();
         const pollInterval = setInterval(() => {
             alertCalc();
-        }, 7000);
+        }, 2000);
 
         return () => clearInterval(pollInterval);
     }, []);

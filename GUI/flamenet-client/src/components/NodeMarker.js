@@ -16,7 +16,6 @@ function NodeMarker({
   isMasterNode,
   fireDetected,
   pressure,
-  ppm1,
   ppm2_5,
   ppm10,
   windVelocity,
@@ -76,7 +75,6 @@ function NodeMarker({
             {co2Level && <p>CO2 Level: {co2Level} ppm</p>}
             {ppm && <p>PPM: {ppm}</p>}
             {pressure && <p>Pressure: {pressure}</p>}
-            {ppm1 && <p>PPM1: {ppm1}</p>}
             {ppm2_5 && <p>PPM2.5: {ppm2_5}</p>}
             {ppm10 && <p>PPM10: {ppm10}</p>}
             {windVelocity && <p>Wind Velocity: {windVelocity}</p>}

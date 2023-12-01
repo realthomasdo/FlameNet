@@ -57,11 +57,6 @@ const DataTable = () => {
         size: 20,
       },
       {
-        accessorKey: 'ppm1',
-        header: 'PPM1',
-        size: 20,
-      },
-      {
         accessorKey: 'ppm2_5',
         header: 'PPM2.5',
         size: 20,
