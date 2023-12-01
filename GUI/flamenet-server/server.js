@@ -95,9 +95,10 @@ app.get('/api/getNodeLogs', async (req, res) => {
 //sort getNodeLogs by node, 
 app.get('/api/getNodeLogsSorted', async (req, res) => {
   try {
-     const sortedArr = [];
+    const nodeLogs = await NodeLog.find();
+    const sortedArr = [];
 
-    data.forEach((entry) => {
+    nodeLogs.forEach((entry) => {
       const { nodeId, timestamp, temperature, humidity, ppm, ppm2_5 } = entry;
       let row = sortedArr.find((row) => row[0] === nodeId);
 
