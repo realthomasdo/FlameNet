@@ -74,7 +74,7 @@ const NodeAlert = () => {
                         const previousTemp = temperatureData[i - 1].temperature;
         
                         if (currentTemp > previousTemp) {
-                            if (currentTemp >= 57) {
+                            if (currentTemp >= 17.5) {
                                 newHighTempSet.add(nodeId);
                             } else {
                                 newHighTempSet.delete(nodeId);
@@ -87,7 +87,7 @@ const NodeAlert = () => {
                     const averageTemperature =
                         temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
         
-                    if (averageTemperature >= 57) {
+                    if (averageTemperature >= 17.22) {
                         newHighAvgSet.add(nodeId);
                     } else {
                         newHighAvgSet.delete(nodeId);

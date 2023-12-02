@@ -85,7 +85,7 @@ const DataTable = () => {
     [],
   );
 
-  useEffect(() => {
+   const fetchData = () => {
     fetch('https://flamenet-server.onrender.com/api/getNodeLogs')
       .then((response) => response.json())
       .then((apiData) => {
@@ -95,7 +95,20 @@ const DataTable = () => {
       .catch((error) => {
         console.error('Data request error: ', error);
       });
-  }, []);
+  };
+  useEffect(() => {
+    // Initial data fetch
+    fetchData();
+  
+    // Set up interval for periodic data fetch
+    const pollInterval = setInterval(() => {
+      fetchData();
+    }, 3000);
+  
+    // Cleanup the interval on component unmount
+    return () => clearInterval(pollInterval);
+  }, []); // Empty dependency array to run the effect only once on mount
+  
 
   return (
     <div style={{ height: '80vh', overflow: 'auto' }}>
