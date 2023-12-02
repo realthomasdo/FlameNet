@@ -74,7 +74,7 @@ const NodeAlert = () => {
                         const previousTemp = temperatureData[i - 1].temperature;
         
                         if (currentTemp > previousTemp) {
-                            if (currentTemp >= 17.5) {
+                            if (currentTemp >= 21) {
                                 newHighTempSet.add(nodeId);
                             } else {
                                 newHighTempSet.delete(nodeId);
@@ -87,7 +87,7 @@ const NodeAlert = () => {
                     const averageTemperature =
                         temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
         
-                    if (averageTemperature >= 17.22) {
+                    if (averageTemperature >= 20.5) {
                         newHighAvgSet.add(nodeId);
                     } else {
                         newHighAvgSet.delete(nodeId);
@@ -156,7 +156,7 @@ const NodeAlert = () => {
                     }
                 >
                     <AlertTitle>High Temperature!</AlertTitle>
-                    <div>Warning: Rising temperatures above 57 degrees detected in the following nodes:</div>
+                    <div>Warning: Rising temperatures detected in the following nodes:</div>
                     <ul>
                         {[...highTemp].sort().map((node) => (
                             <li key={node}>{node}</li>
